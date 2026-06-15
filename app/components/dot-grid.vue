@@ -1,5 +1,5 @@
 <template>
-  <canvas ref="canvasRef" class="fixed inset-0 pointer-events-none" style="z-index:0" />
+  <canvas ref="canvasRef" class="fixed inset-0 pointer-events-none opacity-40" style="z-index:0" />
 </template>
 
 <script setup lang="ts">
@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<{
   dotColor: '#44403c',   // tailwind colors to copy, we cant use HSL here unfortunately, bg-stone-700
   glowColor: '#f97316',  // bg-orange-500
   bgColor: '#0c0a09',    // bg-stone-950
-  cooldown: 0.05,        // fraction of remaining "heat" lost per frame (~1s to cool)
+  cooldown: 0.02,        // fraction of remaining "heat" lost per frame (~1s to cool)
 })
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)

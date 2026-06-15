@@ -1,35 +1,65 @@
 <template>
-  <div v-if="post" class="mt-6">
-    <div>
-      <div v-if="post.meta.category == 'Workers'" class="inline-flex flex-row justify-center rounded-lg py-1.5 px-3 items-center text-stone-200 font-bold text-base mb-1 bg-primary-500/40">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-2 text-primary-500">
-          <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-        </svg>
+  <div>
+    <div v-if="post" class="mt-6">
+      <div>
+        <div v-if="post.meta.category == 'Workers'" class="inline-flex flex-row justify-center rounded-lg py-1.5 px-3 items-center text-stone-200 font-bold text-base mb-1 bg-primary-500/40">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-2 text-primary-500">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+          </svg>
 
-        Workers
+          Workers
+        </div>
       </div>
+
+      <h1 class="text-4xl text-primary-500 font-bold">
+        {{ post.title }}
+      </h1>
+
+      <ContentRenderer
+        class="prose prose-invert mt-3 prose-xl"
+        :value="post"
+      />
     </div>
 
-    <h1 class="text-4xl text-primary-500 font-bold">
-      {{ post.title }}
-    </h1>
+    <!-- Glossary rendering -->
+    <div v-if="showGlossary && glossary" class="fixed top-0 left-0 w-full h-full bg-stone-950/70 backdrop-blur-lg p-3 md:p-12 overflow-auto z-50">
+      <div class="max-w-4xl mx-auto">
+        <a @click="closeGlossary">
+          <div class="flex items-center justify-center rounded-full p-3 text-sm bg-stone-900 font-medium text-stone-200 fixed top-4 right-4 cursor-pointer z-50">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-1">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
 
-    <ContentRenderer
-      class="prose prose-invert mt-3 prose-xl"
-      :value="post"
-    />
+            or press esc
+          </div>
+        </a>
+
+        <h1 class="text-primary-500 text-6xl font-bold mb-6">
+          {{ glossary.title }}
+        </h1>
+
+        <ContentRenderer
+          class="prose prose-invert mt-3 prose-lg max-w-3xl"
+          :value="glossary"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { onKeyStroke } from '@vueuse/core'
+import { useRoute, useRouter } from 'vue-router'
 
 const activeStorybook = inject('activeStorybook') as Ref<string>
 const activePage = inject('activePage') as Ref<string>
+const showGlossary = ref(false)
+const glossary = ref<any>(null)
 const post = ref<any>(null)
 
 const route = useRoute()
+const router = useRouter()
 
 const slug = computed(() => {
   const slugParam = route.params.slug
@@ -46,8 +76,6 @@ const init = async () => {
       .first()
   )
 
-  console.log(data)
-
   post.value = data.data.value
 
   activeStorybook.value = post.value?.meta?.storybook || ''
@@ -61,6 +89,38 @@ watch(
   },
   { immediate: true }
 )
+
+watch(
+  () => route.query.glossary,
+  (newGlossary) => {
+    showGlossary.value = !!newGlossary
+    if (showGlossary.value) {
+      // Load the glossary content
+      queryCollection('content')
+        .path(`/glossary/${newGlossary}`)
+        .first()
+        .then((result) => {
+          glossary.value = result
+
+          document.body.style.overflow = 'hidden' // Prevent background scrolling when glossary is open
+        })
+    } else {
+      glossary.value = null
+    }
+  },
+  {
+    immediate: true
+  }
+)
+
+const closeGlossary = () => {
+  router.replace({ query: { ...route.query, glossary: undefined } })
+  document.body.style.overflow = '' // Restore scrolling
+}
+
+onKeyStroke('Escape', () => {
+  closeGlossary()
+})
 
 onUnmounted(() => {
   activeStorybook.value = ''

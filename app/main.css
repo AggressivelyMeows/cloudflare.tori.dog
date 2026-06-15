@@ -46,6 +46,14 @@ html, body {
   @apply border-2 border-stone-900 rounded-lg bg-stone-950 p-3;
 }
 
+.tori-link {
+  @apply text-primary-500 cursor-pointer after:content-['↗'] after:ml-1;
+}
+
+.tori-glossary-link {
+  @apply text-primary-500 cursor-pointer after:content-['🔎'] after:ml-1;
+}
+
 @theme static {
   --ui-bg: var(--color-stone-950);
   --font-mono: 'IBM Plex Mono', monospace;
@@ -104,7 +112,7 @@ body {
 }
 
 .prose > * > blockquote, .prose > blockquote {
-  @apply text-stone-400 italic block;
+  @apply border-2 border-stone-900 rounded-lg bg-stone-950 p-3;
 }
 
 .prose > .card {
@@ -112,7 +120,11 @@ body {
 }
 
 .prose > .shiki {
-  @apply border-2 border-stone-900 p-3 rounded-lg overflow-hidden;
+  @apply bg-stone-950 border-2 border-stone-900 p-3 rounded-lg overflow-hidden my-6;
+}
+
+.prose > ul {
+  @apply list-disc list-inside mb-3;
 }
 
 [data-explode] .wrapper {	

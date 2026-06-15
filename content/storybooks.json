@@ -2,6 +2,8 @@
   {
     "storybook": "workers-intro",
     "title": "Getting started with Workers",
+    "description": "Learn the basics of Cloudflare Workers!",
+    "category": "workers",
     "pages": [
       { "title": "What are Workers?", "path": "workers/what-are-workers" },
       { "title": "Where to next?", "path": "workers/where-to-next" }
