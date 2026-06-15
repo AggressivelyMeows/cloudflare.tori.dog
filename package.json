@@ -31,7 +31,7 @@
 		"gsap": "^3.13.0",
 		"howler": "^2.2.4",
 		"node-html-parser": "^7.0.1",
-		"nuxt": "^4.1.0",
+		"nuxt": "^4.4.6",
 		"reka-ui": "^2.6.0",
 		"tailwindcss": "^4.1.13",
 		"vue": "^3.5.20",
