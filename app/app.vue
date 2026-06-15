@@ -3,7 +3,7 @@
 
     <ClientOnly>
       <DotGrid
-        :glow-radius="125"
+        :glow-radius="145"
         :enabled="enableGlowGrid"
       />
     </ClientOnly>
@@ -198,7 +198,7 @@ const theming = {
 } as Record<string, Record<string, string>>
 
 useHead({
-  title: 'Torianna - Software engineer.',
+  title: 'Workers Labs',
   // Set the favicon
   link: [
     {
