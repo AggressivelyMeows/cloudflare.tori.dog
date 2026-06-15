@@ -1,0 +1,131 @@
+
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+html, body {
+  min-height: 100vh;
+}
+
+#__nuxt {
+  min-height: 100vh;
+}
+
+:root {
+  --ui-color-primary-50: var(--color-rose-50);
+  --ui-color-primary-100: var(--color-rose-100);
+  --ui-color-primary-200: var(--color-rose-200);
+  --ui-color-primary-300: var(--color-rose-300);
+  --ui-color-primary-400: var(--color-rose-400);
+  --ui-color-primary-500: var(--color-rose-500);
+  --ui-color-primary-600: var(--color-rose-600);
+  --ui-color-primary-700: var(--color-rose-700);
+  --ui-color-primary-800: var(--color-rose-800);
+  --ui-color-primary-900: var(--color-rose-900);
+
+  --ui-color-neutral-50: var(--color-stone-50);
+  --ui-color-neutral-100: var(--color-stone-100);
+  --ui-color-neutral-200: var(--color-stone-200);
+  --ui-color-neutral-300: var(--color-stone-300);
+  --ui-color-neutral-400: var(--color-stone-400);
+  --ui-color-neutral-500: var(--color-stone-500);
+  --ui-color-neutral-600: var(--color-stone-600);
+  --ui-color-neutral-700: var(--color-stone-700);
+  --ui-color-neutral-800: var(--color-stone-800);
+  --ui-color-neutral-900: var(--color-stone-900);
+  --ui-color-neutral-950: var(--color-stone-950);
+
+  --ui-primary: var(--color-rose-500);
+
+  --ui-bg-elevated: var(--color-stone-950);
+
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-sans: 'Inter', sans-serif;
+}
+
+.tori-card {
+  @apply border-2 border-stone-900 rounded-lg bg-stone-950 p-3;
+}
+
+@theme static {
+  --ui-bg: var(--color-stone-950);
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+.bg-elevated/75 {
+  @apply backdrop-blur-sm
+}
+
+#visual > canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+body {
+  background-color: var(--color-stone-950);
+}
+
+
+/* Blog prose */
+
+.prose {
+  @apply font-medium text-stone-200;
+}
+
+.prose > p {
+  @apply text-stone-200 mb-3 text-sm;
+}
+
+.prose > h1, .prose > h2, .prose > h3, .prose > h4, .prose > h5, .prose > h6 {
+  @apply font-bold text-primary-500 mt-6 mb-3;
+}
+
+.prose > h1 {
+  @apply text-5xl;
+}
+
+.prose > h2 {
+  @apply text-4xl;
+}
+
+.prose > h3 {
+  @apply text-2xl;
+}
+
+.prose > h4 {
+  @apply text-xl;
+}
+
+.prose > * > img {
+  @apply rounded-lg shadow-lg border-2 border-stone-900 overflow-hidden;
+}
+
+.prose > * > video {
+  @apply rounded-lg shadow-lg border-2 border-stone-900 overflow-hidden;
+}
+
+.prose > * > blockquote, .prose > blockquote {
+  @apply text-stone-400 italic block;
+}
+
+.prose > .card {
+  @apply p-3 rounded-lg shadow-lg border-2 border-stone-900 overflow-hidden;
+}
+
+.prose > .shiki {
+  @apply border-2 border-stone-900 p-3 rounded-lg overflow-hidden;
+}
+
+[data-explode] .wrapper {	
+	transform-style: preserve-3d;
+}
+
+.glowcard-main {
+  position: relative;
+  backdrop-filter: blur(calc(var(--cardblur, 5) * 1px));
+  @apply rounded-lg bg-stone-950 border-2 border-stone-900;
+}
+
+:root {
+	--backdrop: var(--color-stone-950);
+  --radius: 12px;
+}

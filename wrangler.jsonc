@@ -1,0 +1,44 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "workers-labs",
+	"main": "./.output/server/index.mjs",
+	"compatibility_date": "2025-01-21",
+	"assets": {
+		"binding": "ASSETS",
+		"directory": "./.output/public/"
+	},
+	"observability": {
+		"enabled": true
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_id": "586960b0-a108-4460-95b7-b4edd567cdc4"
+		}
+	],
+	"placement": {
+		"mode": "off"
+	},
+	"kv_namespaces": [
+		{
+			"binding": "KV",
+			"id": "d75a95dce8e144c2b0fb4f4fa7c47276"
+		}
+	],
+	"r2_buckets": [
+		{
+			"binding": "opengraphR2",
+			"bucket_name": "tori-dog-opengraph"
+		}
+	],
+	"services": [
+		{
+			"binding": "AUTH",
+			"service": "torii"
+		}
+	]
+}

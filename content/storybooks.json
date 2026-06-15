@@ -1,0 +1,10 @@
+[
+  {
+    "storybook": "workers-intro",
+    "title": "Getting started with Workers",
+    "pages": [
+      { "title": "What are Workers?", "path": "workers/what-are-workers" },
+      { "title": "Where to next?", "path": "workers/where-to-next" }
+    ]
+  }
+]

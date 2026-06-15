@@ -1,0 +1,49 @@
+{
+	"name": "nuxt-app",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"build": "nuxt build",
+		"dev": "nuxt dev",
+		"generate": "nuxt generate",
+		"preview": "pnpm run build && wrangler dev",
+		"postinstall": "nuxt prepare",
+		"deploy": "pnpm run build && wrangler deploy",
+		"cf-typegen": "wrangler types"
+	},
+	"dependencies": {
+		"@ffmpeg/ffmpeg": "^0.12.15",
+		"@ffmpeg/util": "^0.12.2",
+		"@nuxt/content": "^3.6.3",
+		"@nuxt/fonts": "^0.11.4",
+		"@nuxt/ui": "^3.3.3",
+		"@supabase/supabase-js": "^2.80.0",
+		"@tweenjs/tween.js": "^25.0.0",
+		"@types/howler": "^2.2.12",
+		"@types/webtorrent": "^0.110.1",
+		"@vueuse/core": "^13.8.0",
+		"audiomotion-analyzer": "^4.5.1",
+		"better-sqlite3": "^12.2.0",
+		"chart.js": "^4.5.1",
+		"color": "^5.0.3",
+		"d3": "^7.9.0",
+		"dat.gui": "^0.7.9",
+		"gsap": "^3.13.0",
+		"howler": "^2.2.4",
+		"node-html-parser": "^7.0.1",
+		"nuxt": "^4.1.0",
+		"reka-ui": "^2.6.0",
+		"tailwindcss": "^4.1.13",
+		"vue": "^3.5.20",
+		"vue-router": "^4.5.1",
+		"webtorrent": "^2.8.4"
+	},
+	"packageManager": "pnpm@9.15.9+sha512.68046141893c66fad01c079231128e9afb89ef87e2691d69e4d40eee228988295fd4682181bae55b58418c3a253bde65a505ec7c5f9403ece5cc3cd37dcf2531",
+	"devDependencies": {
+		"@types/d3": "^7.4.3",
+		"h3": "^1.15.4",
+		"nitro-cloudflare-dev": "^0.2.2",
+		"nitropack": "^2.12.5",
+		"wrangler": "^4.49.1"
+	}
+}
