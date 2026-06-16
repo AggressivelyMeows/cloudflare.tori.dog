@@ -4,7 +4,7 @@
       class="text-6xl items-self-center md:text-[6rem] lg:text-[8rem] font-bold bg-clip-text text-transparent bg-cover bg-center tracking-tighter leading-[0.9]"
       :style="`background-color: var(--ui-color-primary-500);background-image: url('${titleImageSrc}');`"
     >
-      Workers<br/>Labs.
+      Workers<br/>Labs. 
     </h1>
 
     <div class="tori-card mt-6">
@@ -13,6 +13,12 @@
         <br/><br/>
         Our goal is to provide a comprehensive set of tutorials and resources to help developers get started with Cloudflare's serverless platform, including Workers, Durable Objects, R2, and more!
       </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 mt-6">
+      <div class="border-2 p-3 rounded-lg bg-green-500/50 border-green-500">
+        Interviews with the team.
+      </div>
     </div>
 
     <h4 class="text-6xl text-primary-500 font-bold mt-12 mb-3">

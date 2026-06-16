@@ -27,6 +27,21 @@ We'll get into the technical details of how cool Workers are in later Labs, but 
 
 ### When to use Workers vs a traditional server?
 
-Workers perform best when designed from the start to be serverless. This means that they should be stateless, and not rely on any local file system or in-memory state. Instead, they can use Cloudflare's other serverless products like <a class="tori-glossary-link" href="?glossary=durable-objects">Durable Objects</a> for stateful applications, or <a class="tori-glossary-link" href="?glossary=r2">R2</a> for object storage.
+Workers work best when designed from the start to be serverless. This means that they should be stateless, and not rely on any local file system or in-memory state. Instead, they can use Cloudflare's other serverless products like <a class="tori-glossary-link" href="?glossary=durable-objects">Durable Objects</a> for stateful applications, or <a class="tori-glossary-link" href="?glossary=r2">R2</a> for object storage.
 
-If your workload requires frequent requests to a backend database, it may be more efficient to use a traditional server. This is because Workers run from anywhere in the world and can have higher latency when making requests to backend services compared to a server that is located close / in the same data center as the services.
+::info
+If your workload requires multiple requests to a single backend service like a database, it might be quicker to run your workload on a traditional server. This is because Workers can run anywhere in the world and may not always be close to your database, leading to higher latency.
+<br/><br/>
+You can offset this by using a globally distributed database, or by sending requests concurrently.
+::
+
+### What can you build with Workers?
+
+Because Workers run on every request, they can power all kinds of projects. Here are a few common ones:
+
+- **APIs**: Build a backend for your app or website without managing a server.
+- **Full websites**: Serve entire sites, including frontends built with frameworks like React or Next.js.
+- **Request handling**: Redirect, rewrite, or modify requests and responses as they come in.
+- **Automation**: Run scheduled tasks, send notifications, or connect different services together.
+
+You can start with a few lines of code and grow from there. Cloudflare scales it for you automatically.

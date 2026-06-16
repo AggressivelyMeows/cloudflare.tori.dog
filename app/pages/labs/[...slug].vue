@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="post" class="mt-6">
+    <div v-if="post && !loading" class="mt-6">
       <div>
         <div v-if="post.meta.category == 'Workers'" class="inline-flex flex-row justify-center rounded-lg py-1.5 px-3 items-center text-stone-200 font-bold text-base mb-1 bg-primary-500/40">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-2 text-primary-500">
@@ -18,7 +18,19 @@
       <ContentRenderer
         class="prose prose-invert mt-3 prose-xl"
         :value="post"
+        :components="{
+          Info
+        }"
       />
+    </div>
+
+    <div v-else class="mt-12 text-center">
+      <h1 class="text-primary-500 text-4xl font-bold mb-6">
+        We're sorry
+      </h1>
+      <p>
+        The page you're looking for cannot be found! Maybe you followed a broken link, or mistyped the URL? Please check the URL and try again!
+      </p>
     </div>
 
     <!-- Glossary rendering -->
@@ -51,12 +63,14 @@
 import { ref } from 'vue'
 import { onKeyStroke } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
+import Info from '~/components/content/Info.vue'
 
 const activeStorybook = inject('activeStorybook') as Ref<string>
 const activePage = inject('activePage') as Ref<string>
 const showGlossary = ref(false)
 const glossary = ref<any>(null)
 const post = ref<any>(null)
+const loading = ref(true)
 
 const route = useRoute()
 const router = useRouter()
@@ -80,6 +94,7 @@ const init = async () => {
 
   activeStorybook.value = post.value?.meta?.storybook || ''
   activePage.value = slug.value
+  loading.value = false
 }
 
 watch(

@@ -127,6 +127,14 @@ body {
   @apply list-disc list-inside mb-3;
 }
 
+.prose > ul > li {
+  @apply mb-1;
+}
+
+.prose > ul > li > strong {
+  @apply text-primary-500;
+}
+
 [data-explode] .wrapper {	
 	transform-style: preserve-3d;
 }
