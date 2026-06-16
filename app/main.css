@@ -51,7 +51,7 @@ html, body {
 }
 
 .tori-glossary-link {
-  @apply text-primary-500 cursor-pointer after:content-['🔎'] after:ml-1;
+  @apply text-primary-500 cursor-pointer after:content-['ⓘ'] after:ml-1;
 }
 
 @theme static {
@@ -112,7 +112,7 @@ body {
 }
 
 .prose > * > blockquote, .prose > blockquote {
-  @apply border-2 border-stone-900 rounded-lg bg-stone-950 p-3;
+  @apply border-2 border-stone-900 rounded-lg bg-stone-950 p-3 my-6;
 }
 
 .prose > .card {

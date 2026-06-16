@@ -19,7 +19,8 @@
         class="prose prose-invert mt-3 prose-xl"
         :value="post"
         :components="{
-          Info
+          Info,
+          Warning
         }"
       />
     </div>
@@ -63,7 +64,8 @@
 import { ref } from 'vue'
 import { onKeyStroke } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
-import Info from '~/components/content/Info.vue'
+import Info from '~/components/content/info.vue'
+import Warning from '~/components/content/warning.vue'
 
 const activeStorybook = inject('activeStorybook') as Ref<string>
 const activePage = inject('activePage') as Ref<string>
@@ -155,4 +157,6 @@ useHead({
     }
   ]
 })
+
+await init()
 </script>

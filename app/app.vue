@@ -88,6 +88,7 @@
           <b class="text-primary-500 mb-3 text-sm">
             {{ storybook.title }}
           </b>
+          
           <NuxtLink
             class="text-xs flex flex-row items-center font-medium"
             v-for="book in storybook.pages"

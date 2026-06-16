@@ -6,6 +6,7 @@
     "category": "workers",
     "pages": [
       { "title": "What are Workers?", "path": "workers/what-are-workers" },
+      { "title": "Your first Worker", "path": "workers/first-worker" },
       { "title": "Where to next?", "path": "workers/where-to-next" }
     ]
   }
