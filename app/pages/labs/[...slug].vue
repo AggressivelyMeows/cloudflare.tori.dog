@@ -158,16 +158,22 @@ onBeforeRouteLeave((to, from) => {
   activePage.value = ''
 })
 
+const { data } = await useAsyncData(
+  `labs-${slug.value}`, () => queryCollection('content')
+    .path(`/${slug.value}`)
+    .first()
+)
+
 useHead({
-  title: post.value ? `${post.value.title} - Workers Labs` : 'Workers Labs',
+  title: data?.value?.title ? `${data?.value?.title} - Workers Labs` : 'Workers Labs',
   meta: [
     {
       name: 'description',
-      content: post.value ? post.value.description : 'Labs, tutorials, and more to help you build cool stuff on Cloudflare.'
+      content: data?.value?.description ? data?.value?.description : 'Labs, tutorials, and more to help you build cool stuff on Cloudflare.'
     },
     {
       name: 'twitter:image',
-      content: `https://tori.dog/api/rendering/open-graph?image=https://images.unsplash.com/photo-1654198340681-a2e0fc449f1b?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&text=${encodeURIComponent(post.value ? post.value.title : 'Workers Labs')}`
+      content: `https://tori.dog/api/rendering/open-graph?image=https://images.unsplash.com/photo-1654198340681-a2e0fc449f1b?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&text=${encodeURIComponent(data?.value?.title || 'Workers Labs')}`
     }
   ]
 })
