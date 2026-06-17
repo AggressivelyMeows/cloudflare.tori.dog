@@ -45,6 +45,24 @@ export class Counter {
 
 Every time someone visits, the number goes up—and it's *remembered* even after the visit ends. A normal Worker couldn't do that on its own.
 
+```json
+{
+  "name": "my-worker",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-01",
+  "durable_objects": {
+    "bindings": [
+      {
+        // The name you use in your code to reach this object
+        "name": "COUNTER",
+        // The class you've exported in your main file
+        "class_name": "Counter"
+      }
+    ]
+  }
+}
+```
+
 ## When Would I Use One?
 
 - A **chat room** where everyone sees the same messages

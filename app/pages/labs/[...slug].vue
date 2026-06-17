@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-12">
     <div v-if="post && !loading" class="mt-6">
       <div>
         <div v-if="post.meta.category == 'Workers'" class="inline-flex flex-row justify-center rounded-lg py-1.5 px-3 items-center text-stone-200 font-bold text-base mb-1 bg-primary-500/40">
@@ -63,7 +63,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { onKeyStroke } from '@vueuse/core'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router'
 import Info from '~/components/content/info.vue'
 import Warning from '~/components/content/warning.vue'
 
@@ -117,9 +117,15 @@ watch(
         .path(`/glossary/${newGlossary}`)
         .first()
         .then((result) => {
+          if (!result) {
+            // Remove the glossary entry
+            closeGlossary()
+            return console.error(`[GLOSSARY] No glossary entry found for: ${newGlossary}`)
+          }
+
           glossary.value = result
 
-          document.body.style.overflow = 'hidden' // Prevent background scrolling when glossary is open
+          if (import.meta.client) document.body.style.overflow = 'hidden' // Prevent background scrolling when glossary is open
         })
     } else {
       glossary.value = null
@@ -132,14 +138,22 @@ watch(
 
 const closeGlossary = () => {
   router.replace({ query: { ...route.query, glossary: undefined } })
-  document.body.style.overflow = '' // Restore scrolling
+  if (process.client) document.body.style.overflow = '' // Restore scrolling
 }
 
 onKeyStroke('Escape', () => {
   closeGlossary()
 })
 
-onUnmounted(() => {
+onBeforeRouteLeave((to, from) => {
+  if (to.name === from.name && to.params.slug !== from.params.slug) {
+    return
+  }
+
+  if (showGlossary.value) {
+    closeGlossary()
+  }
+
   activeStorybook.value = ''
   activePage.value = ''
 })

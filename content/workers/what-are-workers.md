@@ -32,7 +32,7 @@ Workers work best when designed from the start to be serverless. This means that
 ::info
 If your workload requires multiple requests to a single backend service like a database, it might be quicker to run your workload on a traditional server. This is because Workers can run anywhere in the world and may not always be close to your database, leading to higher latency.
 <br/><br/>
-You can offset this by using a globally distributed database, or by sending requests concurrently.
+You can offset this by using a globally distributed database, or by sending requests concurrently. Another solution is to use <a class="tori-glossary-link" href="?glossary=smart-placements">Smart Placements</a>, which runs the Worker in a data center closest to your backend services.
 ::
 
 ### What can you build with Workers?

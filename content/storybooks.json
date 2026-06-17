@@ -9,5 +9,15 @@
       { "title": "Your first Worker", "path": "workers/first-worker" },
       { "title": "Where to next?", "path": "workers/where-to-next" }
     ]
+  },
+  {
+    "storybook": "wrangler",
+    "title": "Wrangler, the CLI for Workers",
+    "description": "Learn how to use Wrangler, the command-line tool for managing Cloudflare Workers.",
+    "category": "workers",
+    "pages": [
+      { "title": "What is Wrangler?", "path": "wrangler/what-is-wrangler" },
+      { "title": "Wrangler Configuration", "path": "wrangler/configuration" }
+    ]
   }
 ]

@@ -88,7 +88,7 @@
           <b class="text-primary-500 mb-3 text-sm">
             {{ storybook.title }}
           </b>
-          
+
           <NuxtLink
             class="text-xs flex flex-row items-center font-medium"
             v-for="book in storybook.pages"
@@ -134,7 +134,7 @@ watch(
   (newStorybook) => {
     const found = storybooks.find((s) => s.storybook === newStorybook)
 
-    console.log(`[STORYBOOK] Active storybook changed to: ${newStorybook}`, found)
+    console.log(`[STORYBOOK] Active storybook changed to:`, newStorybook, found)
 
     if (found) {
       storybook.value = found 
