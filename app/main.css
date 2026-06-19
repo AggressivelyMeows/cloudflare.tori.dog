@@ -38,7 +38,8 @@ html, body {
 
   --ui-bg-elevated: var(--color-stone-950);
 
-  --font-mono: 'IBM Plex Mono', monospace;
+  /* We're doing this as a temp measure to change the font globally. TODO move everything from font-mono. */
+  --font-mono: 'DM Sans', monospace;
   --font-sans: 'Inter', sans-serif;
 }
 
