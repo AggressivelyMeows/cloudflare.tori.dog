@@ -32,7 +32,7 @@
 
     <div id="visual" class="fixed z-10 bottom-0 left-0 w-full h-[10rem] w-full pointer-none" style="pointer-events:none;"></div>
 
-    <div :class="`grid ${ hideSidebar ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3' } font-mono max-w-4xl mx-auto z-10 relative`"  style="isolation: isolate;">
+    <div :class="`grid ${ hideSidebar ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3' } font-medium max-w-4xl mx-auto z-10 relative`"  style="isolation: isolate;">
       <div class="col-span-2 p-3">
         <!-- Main content -->
         <div class="tori-card space-x-3 font-medium flex flex-row" v-if="!isHome && !isAmaRoute">
@@ -60,12 +60,12 @@
 
         <NuxtPage />
       </div>
-      <div class="col-span-1 z-10 relative" v-if="!hideSidebar">
+      <div class="col-span-1 z-10 relative flex flex-col-reverse md:flex-col" v-if="!hideSidebar">
         <div class="tori-card m-3 p-3">
           <a href="https://avatar.tori.dog" target="_blank" rel="noopener">
             <img
               src="https://nyc3.digitaloceanspaces.com/cerulean/screenshots/2025/10/aunn.png"
-              class="mb-2 rounded-sm overflow-hidden"
+              class="mb-2 rounded-sm overflow-hidden size-32 md:size-[unset] object-cover"
             />
           </a>
 
@@ -85,18 +85,18 @@
         </div>
 
         <div class="tori-card mt-6 m-3 p-3 flex flex-col" v-if="storybook && (storybook?.pages || []).length > 0">
-          <b class="text-primary-500 mb-3 text-sm">
+          <b class="text-primary-500 mb-1 text-base">
             {{ storybook.title }}
           </b>
 
           <NuxtLink
-            class="text-xs flex flex-row items-center font-medium"
+            class="text-sm flex flex-row items-center font-medium group"
             v-for="book in storybook.pages"
             :key="book"
             :to="`/labs/${book.path}`"
           >
             <div
-              class="ml-1 mr-2 h-6 w-[3px]"
+              class="ml-1 mr-2 min-h-6 h-full w-[3px] flex-shrink-0 group-hover:bg-primary-500/50 transition-colors"
               :class="{
                 'bg-primary-500': activePage === book.path,
                 'bg-stone-800': activePage !== book.path

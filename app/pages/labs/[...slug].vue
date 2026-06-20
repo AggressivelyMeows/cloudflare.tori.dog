@@ -1,14 +1,25 @@
 <template>
   <div class="mb-12">
     <div v-if="post && !loading" class="mt-6">
-      <div>
-        <div v-if="post.meta.category == 'Workers'" class="inline-flex flex-row justify-center rounded-lg py-1.5 px-3 items-center text-stone-200 font-bold text-base mb-1 bg-primary-500/40">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-2 text-primary-500">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-          </svg>
-
-          Workers
+      <div class="flex flex-wrap items-center justify-between mb-3">
+        <div v-if="post.meta.category">
+          <ContentTag 
+            :tag="post.meta.category"
+          />
         </div>
+
+        <NuxtLink v-if="author" :to="`/labs${author.path}`" class="flex flex-row border-2 border-stone-900 bg-stone-950 rounded-lg py-1.5 px-3 items-center text-xs">
+          Written by
+
+          <img 
+            class="rounded-full w-6 h-6 object-cover mx-1.5"
+            :src="author.meta.avatar"
+          />
+
+          <p>
+            {{ author.meta.name }}
+          </p>
+        </NuxtLink>
       </div>
 
       <h1 class="text-4xl text-primary-500 font-bold">
@@ -20,7 +31,8 @@
         :value="post"
         :components="{
           Info,
-          Warning
+          Warning,
+          Mermaid
         }"
       />
     </div>
@@ -66,12 +78,15 @@ import { onKeyStroke } from '@vueuse/core'
 import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router'
 import Info from '~/components/content/info.vue'
 import Warning from '~/components/content/warning.vue'
+import ContentTag from '~/components/content-tag.vue'
+import Mermaid from '~/components/content/mermaid.vue'
 
 const activeStorybook = inject('activeStorybook') as Ref<string>
 const activePage = inject('activePage') as Ref<string>
 const showGlossary = ref(false)
 const glossary = ref<any>(null)
 const post = ref<any>(null)
+const author = ref<any>(null)  
 const loading = ref(true)
 
 const route = useRoute()
@@ -92,7 +107,14 @@ const init = async () => {
       .first()
   )
 
+  const authorName = data.data.value?.meta.author
+
+  const authorData = await queryCollection('content')
+    .path(`/authors/${authorName}`)
+    .first()
+  
   post.value = data.data.value
+  author.value = authorData
 
   activeStorybook.value = post.value?.meta?.storybook || ''
   activePage.value = slug.value
@@ -158,6 +180,9 @@ onBeforeRouteLeave((to, from) => {
   activePage.value = ''
 })
 
+// Fixes Nuxt's inability to get data from the init function.
+// We need this information to set the page title and meta description, which is important for SEO and social sharing.
+// Only called in SSR
 const { data } = await useAsyncData(
   `labs-${slug.value}`, () => queryCollection('content')
     .path(`/${slug.value}`)

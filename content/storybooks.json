@@ -4,6 +4,7 @@
     "title": "Getting started with Workers",
     "description": "Learn the basics of Cloudflare Workers!",
     "category": "workers",
+    "icon": "Workers",
     "pages": [
       { "title": "What are Workers?", "path": "workers/what-are-workers" },
       { "title": "Your first Worker", "path": "workers/first-worker" },
@@ -15,9 +16,23 @@
     "title": "Wrangler, the CLI for Workers",
     "description": "Learn how to use Wrangler, the command-line tool for managing Cloudflare Workers.",
     "category": "workers",
+    "icon": "Wrangler",
     "pages": [
       { "title": "What is Wrangler?", "path": "wrangler/what-is-wrangler" },
       { "title": "Wrangler Configuration", "path": "wrangler/configuration" }
+    ]
+  },
+  {
+    "storybook": "durable-objects",
+    "title": "Getting started with Durable Objects",
+    "description": "Learn how to build stateful applications on Cloudflare with Durable Objects.",
+    "category": "workers",
+    "icon": "Durable Objects",
+    "pages": [
+      { "title": "What are Durable Objects?", "path": "durable-objects/what-are-durable-objects" },
+      { "title": "Your first Durable Object", "path": "durable-objects/first-durable-object" },
+      { "title": "Storage and state", "path": "durable-objects/storage-and-state" },
+      { "title": "Real-time connections with WebSockets", "path": "durable-objects/websockets" }
     ]
   }
 ]

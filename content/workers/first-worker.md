@@ -3,6 +3,7 @@ title: 'Setting up your first Worker'
 category: 'Workers'
 description: "Install Wrangler, create your first Worker, and get it running locally."
 storybook: 'workers-intro'
+author: 'tori'
 ---
 
 In the last Lab, we learned what a Worker is. Now let's build one. By the end of this Lab, you'll have Wrangler installed, a Worker running on your machine, and the basics you need to deploy it.

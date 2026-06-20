@@ -4,6 +4,7 @@ category: 'Workers'
 description: "Next steps after the introduction to Cloudflare Workers."
 storybook: 'workers-intro'
 type: 'next-steps'
+author: 'tori'
 ---
 
 A Worker is a small JavaScript or TypeScript program that runs on Cloudflare's network when a request comes in.

@@ -3,6 +3,7 @@ title: 'What is Wrangler?'
 category: 'Workers'
 description: "Intro to Cloudflare Wrangler, the CLI tool for managing Cloudflare Workers."
 storybook: 'wrangler'
+author: 'tori'
 ---
 
 Wrangler is the command-line tool you use to build, test, and deploy Cloudflare Workers. Think of it as the toolbox that sits between your code and Cloudflare's network.

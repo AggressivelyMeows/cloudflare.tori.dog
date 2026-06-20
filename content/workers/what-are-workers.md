@@ -3,6 +3,7 @@ title: 'What are Workers?'
 category: 'Workers'
 description: "Intro to Cloudflare Workers, the core of Cloudflare's serverless platform."
 storybook: 'workers-intro'
+author: 'tori'
 ---
 
 A Worker is a small JavaScript, Rust, or Python program that runs on Cloudflare's network when a request comes in.

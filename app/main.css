@@ -11,16 +11,16 @@ html, body {
 }
 
 :root {
-  --ui-color-primary-50: var(--color-rose-50);
-  --ui-color-primary-100: var(--color-rose-100);
-  --ui-color-primary-200: var(--color-rose-200);
-  --ui-color-primary-300: var(--color-rose-300);
-  --ui-color-primary-400: var(--color-rose-400);
-  --ui-color-primary-500: var(--color-rose-500);
-  --ui-color-primary-600: var(--color-rose-600);
-  --ui-color-primary-700: var(--color-rose-700);
-  --ui-color-primary-800: var(--color-rose-800);
-  --ui-color-primary-900: var(--color-rose-900);
+  --ui-color-primary-50: var(--color-orange-50);
+  --ui-color-primary-100: var(--color-orange-100);
+  --ui-color-primary-200: var(--color-orange-200);
+  --ui-color-primary-300: var(--color-orange-300);
+  --ui-color-primary-400: var(--color-orange-400);
+  --ui-color-primary-500: var(--color-orange-500);
+  --ui-color-primary-600: var(--color-orange-600);
+  --ui-color-primary-700: var(--color-orange-700);
+  --ui-color-primary-800: var(--color-orange-800);
+  --ui-color-primary-900: var(--color-orange-900);
 
   --ui-color-neutral-50: var(--color-stone-50);
   --ui-color-neutral-100: var(--color-stone-100);
@@ -34,13 +34,13 @@ html, body {
   --ui-color-neutral-900: var(--color-stone-900);
   --ui-color-neutral-950: var(--color-stone-950);
 
-  --ui-primary: var(--color-rose-500);
+  --ui-primary: var(--color-orange-500);
 
   --ui-bg-elevated: var(--color-stone-950);
 
   /* We're doing this as a temp measure to change the font globally. TODO move everything from font-mono. */
-  --font-mono: 'DM Sans', monospace;
-  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --font-sans: 'DM Sans', sans-serif;
 }
 
 body {
@@ -135,7 +135,11 @@ body {
 }
 
 .prose > .shiki {
-  @apply bg-stone-950 border-2 border-stone-900 p-3 rounded-lg overflow-hidden my-6;
+  @apply bg-stone-950 border-2 border-stone-900 p-3 rounded-lg overflow-hidden my-6 text-sm overflow-x-auto ;
+}
+
+.prose > .shiki {
+  scrollbar-width: thin;
 }
 
 .prose > ul {
@@ -150,17 +154,43 @@ body {
   @apply text-primary-500;
 }
 
-[data-explode] .wrapper {	
-	transform-style: preserve-3d;
+.prose > table {
+  @apply border-separate border-spacing-0 border-2 border-stone-900 rounded-lg w-full my-6 bg-stone-950;
 }
 
-.glowcard-main {
-  position: relative;
-  backdrop-filter: blur(calc(var(--cardblur, 5) * 1px));
-  @apply rounded-lg bg-stone-950 border-2 border-stone-900;
+.prose > table > thead > tr > th {
+  @apply !py-1.5 !px-3 bg-stone-900 text-stone-200; 
+}
+
+.prose > table > tbody > tr {
+  @apply divide-x-2 divide-stone-900;
+}
+
+.prose > table > tbody > tr > td {
+  @apply py-1.5 px-3;
 }
 
 :root {
 	--backdrop: var(--color-stone-950);
   --radius: 12px;
+}
+
+/* Mermaid diagrams */
+.mermaid {
+  @apply bg-stone-950 border-2 border-stone-900 rounded-lg p-4 my-6 overflow-x-auto;
+  scrollbar-width: thin;
+}
+
+.mermaid svg {
+  @apply mx-auto block;
+  max-width: 100%;
+  background: transparent !important;
+}
+
+/* Override any hard-coded white backgrounds injected by Mermaid */
+.mermaid .label-container,
+.mermaid rect.actor,
+.mermaid .cluster rect {
+  fill: #1c1917 !important; /* stone-900 */
+  stroke: #44403c !important; /* stone-700 */
 }

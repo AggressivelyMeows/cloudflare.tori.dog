@@ -3,6 +3,7 @@ title: 'Wrangler Configuration'
 category: 'Workers'
 description: "How to configure Wrangler for your Cloudflare Workers projects."
 storybook: 'wrangler'
+author: 'tori'
 ---
 
 In the last Lab, you got a quick introduction to Wrangler and how it helps you build, test, and deploy your Workers. Now let's take a closer look at how to configure Wrangler for your projects.
