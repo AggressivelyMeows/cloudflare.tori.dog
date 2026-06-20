@@ -4,6 +4,9 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
 
   runtimeConfig: {
+    public: {
+      githubRepo: 'https://github.com/AggressivelyMeows/cloudflare.tori.dog'
+    }
   },
 
   nitro: {
