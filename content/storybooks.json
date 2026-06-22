@@ -54,6 +54,7 @@
     "category": "workers",
     "icon": "Workers",
     "pages": [
+      { "title": "Lab overview", "path": "avatar-upload/lab-overview" },
       { "title": "Create the upload page", "path": "avatar-upload/create-upload-page" },
       { "title": "Create the upload API", "path": "avatar-upload/create-upload-api" },
       { "title": "Add useful extras", "path": "avatar-upload/add-useful-extras" }
