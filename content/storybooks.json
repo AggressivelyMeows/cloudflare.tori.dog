@@ -46,5 +46,17 @@
       { "title": "Your first R2 bucket", "path": "r2/first-bucket" },
       { "title": "Working with objects", "path": "r2/working-with-objects" }
     ]
+  },
+  {
+    "storybook": "avatar-upload",
+    "title": "Build an avatar uploader",
+    "description": "Create a basic avatar upload page, API, and production-ready extras.",
+    "category": "workers",
+    "icon": "Workers",
+    "pages": [
+      { "title": "Create the upload page", "path": "avatar-upload/create-upload-page" },
+      { "title": "Create the upload API", "path": "avatar-upload/create-upload-api" },
+      { "title": "Add useful extras", "path": "avatar-upload/add-useful-extras" }
+    ]
   }
 ]
