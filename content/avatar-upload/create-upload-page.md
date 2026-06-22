@@ -1,36 +1,41 @@
 ---
 title: 'Create the upload page'
 category: 'Workers'
-description: 'Build a simple page that lets users pick, preview, and submit an avatar image.'
+description: 'Let's build the page where users pick and preview their new avatar.'
 storybook: 'avatar-upload'
 author: 'tori'
 ---
 
-For this first step, build a plain form with one file input, one preview area, and one submit button.
+Alright, let's start with the fun part — the page your users will actually see.
 
-### 1) Build the page UI
+We need three things: a file picker, a preview so they can see what they chose, and a button to send it off. That's the whole page. Nice and simple.
 
-Create a route like `/account/avatar` with:
+### The file picker
 
-- An `<input type="file" accept="image/*">`
-- A preview `<img>` that updates when a file is selected
-- A submit button that stays disabled until a valid file is chosen
+HTML gives us a built-in file picker for free. We just tell it we only want images:
 
-Keep the layout simple. The page only needs to solve one task clearly: upload an avatar.
+```ts
+<input type="file" accept="image/*" />
+```
 
-### 2) Validate in the browser first
+When someone picks a file, we can grab it and show a preview right away using `URL.createObjectURL`. It's instant and doesn't need a server round-trip — the browser handles it locally.
 
-Before you send anything to your API:
+### Quick sanity checks
 
-- Reject files larger than your chosen limit (for example 2 MB)
-- Reject non-image MIME types
-- Show a short, user-friendly message when validation fails
+Before we bother sending anything to our API, let's catch obvious problems early:
 
-Client checks improve UX, but they do **not** replace server checks. The API will still validate everything again.
+- Is the file actually an image? (Check the MIME type)
+- Is it under 2 MB? (Or whatever limit makes sense for your app)
 
-### 3) Send the file to your API
+If something's off, just show a friendly message. No need to hit the server for something we already know is wrong.
 
-On submit, send the selected file with `FormData` to an API route such as `/api/avatar`.
+::info
+These browser-side checks are just for a nice user experience. The API will double-check everything anyway — never trust the client!
+::
+
+### Sending it off
+
+When they hit upload, we pack the file into a `FormData` and fire it at our API:
 
 ```ts
 const form = new FormData()
@@ -42,8 +47,6 @@ await fetch('/api/avatar', {
 })
 ```
 
-If upload succeeds, update the profile avatar URL on the page so users see the result immediately.
+Throw a little loading spinner on the button while it's working, and once it comes back successful, swap in the new avatar URL. Done! Your user just uploaded a profile picture.
 
-::info
-Use a loading state on the submit button while the upload is in progress. It prevents duplicate requests and makes the app feel more reliable.
-::
+The browser side is honestly the easiest part. Next up, we'll build the API that actually receives and stores the file.

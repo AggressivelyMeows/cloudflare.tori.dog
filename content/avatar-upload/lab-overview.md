@@ -1,49 +1,38 @@
 ---
 title: 'Lab overview'
 category: 'Workers'
-description: 'Start here to understand what this avatar upload lab builds, and how each piece works together.'
+description: 'What we're building, why it's cool, and how it all fits together.'
 storybook: 'avatar-upload'
 author: 'tori'
 ---
 
-If you're new to Cloudflare tools, this is the best place to start.
+Hey! Welcome to the avatar upload Lab.
 
-In this Lab, you'll build a small avatar upload feature from end to end. By the end, you'll have a working flow where a user picks an image, uploads it through an API, and sees their new avatar show up in the app.
+We're going to build something you've probably used a hundred times — that little "change your profile picture" button. Except this time, you'll understand every piece of how it works, from the moment someone picks a photo to the moment it shows up on their profile.
 
-### What this Lab is about
+### So what are we actually building?
 
-This Lab is about learning how frontend and backend parts connect in a real feature:
+A real avatar upload flow! The kind you see on social media, forums, or any app with user profiles. Here's the gist:
 
-- A simple upload page in your app
-- A Worker API route that receives and validates the file
-- R2 object storage where avatar images live
-- A few practical extras so the feature is reliable in production
+1. A page where you pick a photo and see a preview before uploading
+2. An API that catches the file, makes sure it's legit, and saves it
+3. Storage in <a class="tori-glossary-link" href="?glossary=r2">R2</a> so the image sticks around
+4. Some nice touches to make it feel production-ready
 
-You do not need to be an expert first. We'll build one step at a time.
+Nothing here is theoretical — by the end you'll have something that actually works.
 
-### What you'll make
+### How does the whole thing connect?
 
-You'll make a basic but realistic avatar system:
+Think of it like a relay race:
 
-1. A page where users select an image, preview it, and submit
-2. An API endpoint that checks file type and size before saving
-3. Stored avatar files in R2, keyed by user identity
-4. Quality-of-life improvements like caching, cleanup, and abuse limits
+1. You pick an image on the page
+2. The page hands it off to your API
+3. The API checks it's a valid image and drops it into R2
+4. R2 gives back a URL
+5. The page shows your shiny new avatar
 
-This is a strong starter pattern you can reuse for other uploads like documents, banners, or profile media.
-
-### How it will function
-
-At a high level, the flow works like this:
-
-1. The user picks a file in the browser
-2. The browser sends that file to your `/api/avatar` endpoint
-3. The API validates the request and stores the file in R2
-4. The API returns an avatar URL
-5. The frontend updates the profile image with that URL
-
-Each page in this storybook focuses on one piece of that chain so it's easier to understand and debug.
+That's it! Each step in this Lab focuses on one leg of that relay so you never feel lost.
 
 ::info
-As a beginner, focus on understanding the data flow first: browser -> API -> storage -> browser update. Once that clicks, everything else in this Lab is much easier.
+Don't worry if some of these terms are new. We'll explain everything as we go. Just focus on the big picture for now — the details will make sense once we start building.
 ::

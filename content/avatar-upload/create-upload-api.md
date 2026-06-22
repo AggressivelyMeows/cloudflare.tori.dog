@@ -1,37 +1,38 @@
 ---
 title: 'Create the upload API'
 category: 'Workers'
-description: 'Create an API endpoint that validates avatar uploads and stores them in R2.'
+description: 'Now let's build the Worker that catches the file and saves it to R2.'
 storybook: 'avatar-upload'
 author: 'tori'
 ---
 
-Now connect your page to a Worker API endpoint that receives the file and stores it in <a class="tori-glossary-link" href="?glossary=r2">R2</a>.
+Cool, so the page can send files now. Let's build the thing that catches them!
 
-### 1) Parse `multipart/form-data`
+Our API route needs to do three jobs: grab the file from the request, make sure it's safe, and drop it into <a class="tori-glossary-link" href="?glossary=r2">R2</a>. Let's walk through each one.
 
-In `/api/avatar`, parse the incoming form data and read the `avatar` file:
+### Grab the file
+
+When a `FormData` request lands, we pull out the file like this:
 
 ```ts
 const form = await request.formData()
 const avatar = form.get('avatar')
 ```
 
-Return `400` if the field is missing or not a file.
+If there's no file attached (or someone sends garbage), we just return a `400 Bad Request` and call it a day.
 
-### 2) Enforce server-side validation
+### Make sure it's legit
 
-Always validate again on the server:
+Remember how we did checks in the browser? We do them again here. Always. The browser checks are a courtesy — the server checks are the law.
 
-- Allow only expected image types (for example `image/jpeg`, `image/png`, `image/webp`)
-- Enforce max size
-- Optionally decode and re-encode to strip unsupported data
+- Is it actually an image? (`image/jpeg`, `image/png`, `image/webp`)
+- Is it under our size limit?
 
-This keeps your storage clean and prevents clients from bypassing browser checks.
+If it fails, return an error. Don't store junk in your bucket.
 
-### 3) Write the object to R2
+### Save it to R2
 
-Use a deterministic key, often based on user ID:
+Now the fun part! We pick a key based on the user's ID (so everyone's avatar lives in a predictable spot) and write it:
 
 ```ts
 const key = `avatars/${user.id}/original.webp`
@@ -41,12 +42,12 @@ await env.AVATARS.put(key, avatar.stream(), {
 })
 ```
 
-Then return JSON containing the public or signed URL the frontend should display.
+Then we send back the URL so the frontend can display it immediately.
 
-### 4) Handle auth and ownership
+### A note on auth
 
-Only authenticated users should upload avatars, and each user should only write to their own keyspace. Never trust a client-provided user ID.
+This should go without saying, but only logged-in users should be able to upload, and they should only be able to write to *their own* avatar slot. Don't trust a user ID that comes from the client — always pull it from your auth session.
 
 ::warning
-Do not rely on file extensions for safety. Check MIME types and size server-side every time.
+Never rely on file extensions to decide if something is safe. Always check the actual content type on the server.
 ::

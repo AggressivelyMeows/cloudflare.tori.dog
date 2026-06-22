@@ -1,55 +1,49 @@
 ---
 title: 'Add useful extras'
 category: 'Workers'
-description: 'Finish your avatar flow with resizing, cleanup, caching, and abuse protection.'
+description: 'Polish it up with resizing, caching, and a few things that make it production-worthy.'
 storybook: 'avatar-upload'
 author: 'tori'
 ---
 
-Once the basic upload works, add a few practical improvements so the feature is production-friendly.
+At this point you have a working avatar uploader — nice! But there's a gap between "it works on my machine" and "it works for thousands of users." Let's close that gap with a few easy wins.
 
-### 1) Generate size variants
+### Different sizes for different places
 
-Create a small set of variants (for example 64, 128, and 256 pixels) so clients can request the right size for each UI context.
+Your app probably shows avatars at different sizes — a tiny one in a nav bar, a bigger one on a profile page. Instead of making the browser resize a huge image every time, generate a few variants when the upload happens:
 
-- Store variants under predictable keys
-- Keep one canonical source image
-- Re-generate variants when users replace avatars
+- A small one (64px) for lists and comments
+- A medium one (128px) for cards
+- A large one (256px) for profile pages
 
-### 2) Add cache headers
+Store them all in R2 under predictable keys like `avatars/{id}/64.webp`. When your frontend needs an avatar, it just asks for the right size.
 
-Avatar images are read frequently, so cache them aggressively:
+### Cache the heck out of it
 
-- Add `Cache-Control` headers on responses
-- Use versioned URLs (or a hash in the key) to avoid stale images after updates
+Avatars get loaded *a lot*. Every time someone sees a comment, a message, a profile card — that's an avatar request. Slap a `Cache-Control` header on your responses so Cloudflare's edge caches them:
 
-This keeps requests fast and reduces origin reads.
+When someone updates their avatar, change the URL (add a version hash or timestamp) so the old cached version doesn't stick around.
 
-### 3) Clean up old files
+### Clean up after yourself
 
-When users upload a new avatar:
+When someone uploads a new avatar, the old one is just... sitting there, taking up space and costing you money. Delete it! You can do this in the background after the new upload succeeds — the user doesn't need to wait for cleanup to finish.
 
-- Delete old variants in the background
-- Keep short-lived backups only if your product needs rollback
+### Don't let people abuse it
 
-Without cleanup, storage costs quietly grow over time.
+A few simple guardrails go a long way:
 
-### 4) Add basic abuse controls
+- Rate limit uploads (maybe 5 per hour per user?)
+- Enforce that size limit we talked about
+- Log failed attempts so you can spot patterns
 
-Protect the endpoint with simple controls:
+You don't need anything fancy. Just enough to prevent someone from uploading 10,000 images in a loop.
 
-- Per-user rate limits
-- Upload size limits
-- Request logging for failed attempts
+### Little UX touches
 
-These checks make accidental misuse and simple abuse much easier to handle.
+Finally, sprinkle in some polish:
 
-### 5) Improve UX details
+- Show a clear error if something goes wrong (not just a blank fail)
+- If the upload fails because of a network hiccup, offer a retry button
+- Make sure screen readers can understand what's happening too
 
-Round out the flow with:
-
-- Inline error messages
-- Retry after transient failures
-- Accessible labels and status text for screen readers
-
-The core logic stays small, but the final experience feels much more polished.
+None of these are hard, but they're the difference between "I built a thing" and "I built a thing people actually enjoy using."
