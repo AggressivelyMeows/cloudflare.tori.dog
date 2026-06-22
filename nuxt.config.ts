@@ -22,5 +22,16 @@ export default defineNuxtConfig({
   css: ['~/main.css'],
   routeRules: {
     '/': { prerender: true }
+  },
+
+  content: {
+    build: {
+      markdown: {
+        highlight: {
+          theme: 'github-dark',
+          langs: ['javascript', 'typescript']
+        }
+      }
+    }
   }
 })

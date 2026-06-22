@@ -34,5 +34,17 @@
       { "title": "Storage and state", "path": "durable-objects/storage-and-state" },
       { "title": "Real-time connections with WebSockets", "path": "durable-objects/websockets" }
     ]
+  },
+  {
+    "storybook": "r2",
+    "title": "Getting started with R2",
+    "description": "Learn how to store and serve files on Cloudflare with R2.",
+    "category": "workers",
+    "icon": "R2",
+    "pages": [
+      { "title": "What is R2?", "path": "r2/what-is-r2" },
+      { "title": "Your first R2 bucket", "path": "r2/first-bucket" },
+      { "title": "Working with objects", "path": "r2/working-with-objects" }
+    ]
   }
 ]

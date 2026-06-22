@@ -6,9 +6,9 @@ storybook: 'durable-objects'
 author: 'tori'
 ---
 
-A visit counter is the smallest example of state that has to survive between requests. Here you'll build one with a Worker that forwards every request to a single Durable Object, which keeps the running total on disk.
+The quickest way to see a Durable Object work end to end is to give it one number to look after. Wire up a Worker that forwards every request to a single object, and that object will increment and persist a running total. It's deliberately small so the moving parts (the binding, the migration, the storage call) stay visible.
 
-The request path looks like this:
+The request path:
 
 <mermaid>
 flowchart LR
@@ -23,7 +23,7 @@ flowchart LR
 You'll need a Cloudflare Workers project. If you don't have one yet, follow the [Your first Worker](/labs/workers-intro/first-worker) Lab first.
 
 ::info
-For this Lab, we'll be using the Key-Value storage API to keep the count on disk. For more complex data, you may wish to use the <a class="tori-link" href="/labs/durable-objects/storage-and-state#querying-with-sql">SQLite API</a> instead. Both are available inside Durable Objects.
+This Lab uses the key-value storage API to keep the count on disk. For more complex data, the <a class="tori-link" href="/labs/durable-objects/storage-and-state#querying-with-sql">SQLite API</a> may be a better fit. Both are available inside Durable Objects.
 ::
 
 ### Step 1: Write the Durable Object class
@@ -35,10 +35,9 @@ import { DurableObject } from 'cloudflare:workers'
 
 export class Counter extends DurableObject {
   async fetch(request: Request): Promise<Response> {
-    // Read the current count, defaulting to 0
+    // Default to 0 on the first request, when no count exists yet.
     const count = ((await this.ctx.storage.get<number>('count')) ?? 0) + 1
 
-    // Save the new count
     await this.ctx.storage.put('count', count)
 
     return new Response(`Visits: ${count}`)
@@ -55,7 +54,7 @@ Update (or add) the default export below the class.
 ```ts
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    // A fixed name keeps every request pointed at one shared counter
+    // A fixed name keeps every request pointed at one shared counter.
     const id = env.COUNTER.idFromName('global-counter')
     const counter = env.COUNTER.get(id)
 
@@ -121,7 +120,7 @@ Put it at the top of `src/index.ts` or in a separate `env.d.ts` file.
 npx wrangler dev
 ```
 
-Open `http://localhost:8787` in your browser. Each refresh increments the number. Stop and restart `wrangler dev` and the number persists, because the count is stored on disk.
+Open `http://localhost:8787` in your browser. Each refresh increments the number. Stop and restart `wrangler dev` and the number persists, because the count lives on disk.
 
 ### Step 6: Deploy
 
