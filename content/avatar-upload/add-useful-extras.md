@@ -22,6 +22,15 @@ Store them all in R2 under predictable keys like `avatars/{id}/64.webp`. When yo
 
 Avatars get loaded *a lot*. Every time someone sees a comment, a message, a profile card — that's an avatar request. Slap a `Cache-Control` header on your responses so Cloudflare's edge caches them:
 
+```ts
+return new Response(object.body, {
+  headers: {
+    'Content-Type': 'image/webp',
+    'Cache-Control': 'public, max-age=86400' // cache for 24 hours
+  }
+})
+```
+
 When someone updates their avatar, change the URL (add a version hash or timestamp) so the old cached version doesn't stick around.
 
 ### Clean up after yourself

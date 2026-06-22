@@ -14,7 +14,7 @@ We need three things: a file picker, a preview so they can see what they chose, 
 
 HTML gives us a built-in file picker for free. We just tell it we only want images:
 
-```ts
+```html
 <input type="file" accept="image/*" />
 ```
 
