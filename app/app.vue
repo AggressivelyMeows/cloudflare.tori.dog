@@ -96,10 +96,10 @@
             :to="`/labs/${book.path}`"
           >
             <div
-              class="ml-1 mr-2 min-h-6 h-full w-[3px] flex-shrink-0 group-hover:bg-primary-500/50 transition-colors"
+              class="ml-1 mr-2 min-h-6 h-full w-[3px] flex-shrink-0 transition-colors"
               :class="{
                 'bg-primary-500': activePage === book.path,
-                'bg-stone-800': activePage !== book.path
+                'bg-stone-800 group-hover:bg-primary-500/50': activePage !== book.path
               }"
             ></div>
 

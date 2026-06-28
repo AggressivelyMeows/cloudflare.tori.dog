@@ -58,5 +58,16 @@
       { "title": "Your first R2 bucket", "path": "r2/first-bucket" },
       { "title": "Working with objects", "path": "r2/working-with-objects" }
     ]
+  },
+  {
+    "storybook": "kv",
+    "title": "Getting started with KV",
+    "description": "Learn how to store and read small pieces of data fast with Workers KV.",
+    "category": "storage",
+    "icon": "Storage",
+    "pages": [
+      { "title": "What is KV?", "path": "storage/kv/what-is-kv" },
+      { "title": "Your first KV namespace", "path": "storage/kv/first-kv-namespace" }
+    ]
   }
 ]

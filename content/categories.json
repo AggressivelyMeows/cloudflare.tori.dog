@@ -16,5 +16,11 @@
     "title": "R2",
     "description": "Serve files, store data, and manage objects with R2.",
     "icon": "R2"
+  },
+  {
+    "id": "storage",
+    "title": "Storage Primitives",
+    "description": "Store and retrieve small pieces of data fast, from anywhere.",
+    "icon": "Storage"
   }
 ]
