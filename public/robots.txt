@@ -1,2 +1,4 @@
 User-Agent: *
 Disallow:
+
+Sitemap: https://workers.tori.dog/sitemap.xml
