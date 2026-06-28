@@ -199,7 +199,7 @@ const siteOrigin = 'https://workers.tori.dog'
 const canonicalUrl = computed(() => `${siteOrigin}/labs/${slug.value}`)
 
 const ogImage = computed(() =>
-  `https://workers.tori.dog/api/rendering/open-graph?image=https://images.unsplash.com/photo-1654198340681-a2e0fc449f1b?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&text=${encodeURIComponent(post.value?.title || 'Workers Labs')}`
+  `https://tori.dog/api/rendering/open-graph?image=https://images.unsplash.com/photo-1654198340681-a2e0fc449f1b?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&text=${encodeURIComponent(post.value?.title || 'Workers Labs')}`
 )
 
 const seoTitle = computed(() =>
