@@ -26,7 +26,7 @@
     "storybook": "durable-objects",
     "title": "Getting started with Durable Objects",
     "description": "Learn how to build stateful applications on Cloudflare with Durable Objects.",
-    "category": "workers",
+    "category": "durable-objects",
     "icon": "Durable Objects",
     "pages": [
       { "title": "What are Durable Objects?", "path": "durable-objects/what-are-durable-objects" },
@@ -36,10 +36,22 @@
     ]
   },
   {
+    "storybook": "chat-app",
+    "title": "Building a chat app with Durable Objects",
+    "description": "Combine WebSockets, storage, and presence into a real-time chat app with rooms.",
+    "category": "durable-objects",
+    "icon": "Durable Objects",
+    "pages": [
+      { "title": "Building a chat app", "path": "durable-objects/chat/chat-app" },
+      { "title": "Message history and presence", "path": "durable-objects/chat/chat-history" },
+      { "title": "The chat client", "path": "durable-objects/chat/chat-client" }
+    ]
+  },
+  {
     "storybook": "r2",
     "title": "Getting started with R2",
     "description": "Learn how to store and serve files on Cloudflare with R2.",
-    "category": "workers",
+    "category": "r2",
     "icon": "R2",
     "pages": [
       { "title": "What is R2?", "path": "r2/what-is-r2" },

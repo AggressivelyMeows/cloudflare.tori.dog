@@ -18,7 +18,12 @@ export default defineNuxtConfig({
     }
   },
 
-  modules: ["nitro-cloudflare-dev", '@nuxt/ui', '@nuxt/fonts', '@nuxt/content'],
+  modules: [
+    "nitro-cloudflare-dev",
+    '@nuxt/ui',
+    '@nuxt/fonts',
+    '@nuxt/content'
+  ],
   css: ['~/main.css'],
   routeRules: {
     '/': { prerender: true }

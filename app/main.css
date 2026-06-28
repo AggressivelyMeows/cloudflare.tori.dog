@@ -154,6 +154,18 @@ body {
   @apply text-primary-500;
 }
 
+.prose > ol {
+  @apply list-decimal list-inside mb-3;
+}
+
+.prose > ol > li {
+  @apply mb-1;
+}
+
+.prose > ol > li > strong {
+  @apply text-primary-500;
+}
+
 .prose > table {
   @apply border-separate border-spacing-0 border-2 border-stone-900 rounded-lg w-full my-6 bg-stone-950;
 }

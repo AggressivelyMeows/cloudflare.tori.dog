@@ -1,0 +1,20 @@
+[
+  {
+    "id": "workers",
+    "title": "Workers",
+    "description": "Learn how to build serverless applications with Workers.",
+    "icon": "Workers"
+  },
+  {
+    "id": "durable-objects",
+    "title": "Durable Objects",
+    "description": "Stateful applications with Durable Objects.",
+    "icon": "Durable Objects"
+  },
+  {
+    "id": "r2",
+    "title": "R2",
+    "description": "Serve files, store data, and manage objects with R2.",
+    "icon": "R2"
+  }
+]
