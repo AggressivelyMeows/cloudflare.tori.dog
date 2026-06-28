@@ -15,6 +15,7 @@
             <img 
               class="rounded-full w-6 h-6 object-cover mx-1.5"
               :src="author.meta.avatar"
+              :alt="author.meta.name"
             />
 
             <p>
@@ -91,8 +92,6 @@ const activeStorybook = inject('activeStorybook') as Ref<string>
 const activePage = inject('activePage') as Ref<string>
 const showGlossary = ref(false)
 const glossary = ref<any>(null)
-const post = ref<any>(null)
-const author = ref<any>(null)  
 const loading = ref(true)
 
 const route = useRoute()
@@ -109,33 +108,40 @@ const slug = computed(() => {
   return slugParam || ''
 })
 
-const init = async () => {
-  const data = await useAsyncData(
-    `labs-${slug.value}`, () => queryCollection('content')
-      .path(`/${slug.value}`)
-      .first()
-  )
+// Single source of truth for the post data.
+// `watch: [slug]` re-fetches on client-side navigation between lab pages.
+const { data: post } = await useAsyncData<any>(
+  `labs-${slug.value}`,
+  () => queryCollection('content')
+    .path(`/${slug.value}`)
+    .first(),
+  { watch: [slug] }
+)
 
-  const authorName = data.data.value?.meta.author
+// Author data, re-fetched whenever the post (and thus the author) changes.
+const { data: author } = await useAsyncData<any>(
+  `author-${slug.value}`,
+  () => {
+    const authorName = post.value?.meta?.author
+    return authorName
+      ? queryCollection('content').path(`/authors/${authorName}`).first()
+      : Promise.resolve(null)
+  },
+  { watch: [post] }
+)
 
-  const authorData = await queryCollection('content')
-    .path(`/authors/${authorName}`)
-    .first()
-  
-  post.value = data.data.value
-  author.value = authorData
-
-  activeStorybook.value = post.value?.meta?.storybook || ''
+// Keep the shared layout state (storybook sidebar) in sync.
+watch(post, (newPost) => {
+  activeStorybook.value = newPost?.meta?.storybook || ''
   activePage.value = slug.value
   loading.value = false
-}
+}, { immediate: true })
 
 watch(
   () => route.params.slug,
-  (newSlug) => {
-    init()
-  },
-  { immediate: true }
+  () => {
+    loading.value = true
+  }
 )
 
 watch(
@@ -189,28 +195,58 @@ onBeforeRouteLeave((to, from) => {
   activePage.value = ''
 })
 
-// Fixes Nuxt's inability to get data from the init function.
-// We need this information to set the page title and meta description, which is important for SEO and social sharing.
-// Only called in SSR
-const { data } = await useAsyncData(
-  `labs-${slug.value}`, () => queryCollection('content')
-    .path(`/${slug.value}`)
-    .first()
+const siteOrigin = 'https://workers.tori.dog'
+const canonicalUrl = computed(() => `${siteOrigin}/labs/${slug.value}`)
+
+const ogImage = computed(() =>
+  `https://workers.tori.dog/api/rendering/open-graph?image=https://images.unsplash.com/photo-1654198340681-a2e0fc449f1b?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&text=${encodeURIComponent(post.value?.title || 'Workers Labs')}`
 )
 
+const seoTitle = computed(() =>
+  post.value?.title ? `${post.value.title} - Workers Labs` : 'Workers Labs'
+)
+
+const seoDescription = computed(() =>
+  post.value?.description || 'Labs, tutorials, and more to help you build cool stuff on Cloudflare.'
+)
+
+useSeoMeta({
+  title: () => seoTitle.value,
+  description: () => seoDescription.value,
+  ogTitle: () => seoTitle.value,
+  ogDescription: () => seoDescription.value,
+  ogImage: () => ogImage.value,
+  ogUrl: () => canonicalUrl.value,
+  ogType: 'article',
+  ogSiteName: 'Workers Labs',
+  twitterCard: 'summary_large_image',
+  twitterTitle: () => seoTitle.value,
+  twitterDescription: () => seoDescription.value,
+  twitterImage: () => ogImage.value
+})
+
 useHead({
-  title: data?.value?.title ? `${data?.value?.title} - Workers Labs` : 'Workers Labs',
-  meta: [
+  link: [{ rel: 'canonical', href: () => canonicalUrl.value }],
+  script: [
     {
-      name: 'description',
-      content: data?.value?.description ? data?.value?.description : 'Labs, tutorials, and more to help you build cool stuff on Cloudflare.'
-    },
-    {
-      name: 'twitter:image',
-      content: `https://tori.dog/api/rendering/open-graph?image=https://images.unsplash.com/photo-1654198340681-a2e0fc449f1b?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&text=${encodeURIComponent(data?.value?.title || 'Workers Labs')}`
+      type: 'application/ld+json',
+      innerHTML: () => JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'TechArticle',
+        headline: post.value?.title,
+        description: post.value?.description,
+        author: author.value
+          ? { '@type': 'Person', name: author.value.meta?.name }
+          : undefined,
+        image: ogImage.value,
+        url: canonicalUrl.value,
+        publisher: {
+          '@type': 'Organization',
+          name: 'Workers Labs',
+          url: siteOrigin
+        }
+      })
     }
   ]
 })
-
-await init()
 </script>
