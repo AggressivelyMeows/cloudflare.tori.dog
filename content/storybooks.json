@@ -5,6 +5,7 @@
     "description": "Learn the basics of Cloudflare Workers!",
     "category": "workers",
     "icon": "Workers",
+    "complexity": 1,
     "pages": [
       { "title": "What are Workers?", "path": "workers/what-are-workers" },
       { "title": "Your first Worker", "path": "workers/first-worker" },
@@ -17,6 +18,7 @@
     "description": "Learn how to use Wrangler, the command-line tool for managing Cloudflare Workers.",
     "category": "workers",
     "icon": "Wrangler",
+    "complexity": 1,
     "pages": [
       { "title": "What is Wrangler?", "path": "wrangler/what-is-wrangler" },
       { "title": "Wrangler Configuration", "path": "wrangler/configuration" }
@@ -28,6 +30,7 @@
     "description": "Coordinate a multi-step order pipeline with Workflows, D1, with human approval steps.",
     "category": "workers",
     "icon": "Workflows",
+    "complexity": 4,
     "pages": [
       { "title": "Ordering with Workflows", "path": "workers/food-ordering/ordering-with-workflows" },
       { "title": "Storing orders in D1", "path": "workers/food-ordering/storing-orders" },
@@ -44,6 +47,7 @@
     "description": "Learn how to build stateful applications on Cloudflare with Durable Objects.",
     "category": "durable-objects",
     "icon": "Durable Objects",
+    "complexity": 2,
     "pages": [
       { "title": "What are Durable Objects?", "path": "durable-objects/what-are-durable-objects" },
       { "title": "Your first Durable Object", "path": "durable-objects/first-durable-object" },
@@ -57,6 +61,7 @@
     "description": "Combine WebSockets, storage, and presence into a real-time chat app with rooms.",
     "category": "durable-objects",
     "icon": "Durable Objects",
+    "complexity": 3,
     "pages": [
       { "title": "Building a chat app", "path": "durable-objects/chat/chat-app" },
       { "title": "Message history and presence", "path": "durable-objects/chat/chat-history" },
@@ -69,6 +74,7 @@
     "description": "Learn how to store and serve files on Cloudflare with R2.",
     "category": "r2",
     "icon": "R2",
+    "complexity": 1,
     "pages": [
       { "title": "What is R2?", "path": "r2/what-is-r2" },
       { "title": "Your first R2 bucket", "path": "r2/first-bucket" },
@@ -81,6 +87,7 @@
     "description": "Learn how to store and read small pieces of data fast with Workers KV.",
     "category": "storage",
     "icon": "Storage",
+    "complexity": 1,
     "pages": [
       { "title": "What is KV?", "path": "storage/kv/what-is-kv" },
       { "title": "Your first KV namespace", "path": "storage/kv/first-kv-namespace" }
@@ -92,6 +99,7 @@
     "description": "Store short links in a SQL database and redirect visitors with a Worker.",
     "category": "storage",
     "icon": "Storage",
+    "complexity": 2,
     "pages": [
       { "title": "Building a URL shortener", "path": "storage/url-shortener/url-shortener" },
       { "title": "Creating short links", "path": "storage/url-shortener/creating-links" },

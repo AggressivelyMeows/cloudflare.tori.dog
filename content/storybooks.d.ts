@@ -3,6 +3,7 @@ export type Storybook = {
   title: string
   description: string
   category: string
+  complexity: number
   pages: {
     title: string
     path: string

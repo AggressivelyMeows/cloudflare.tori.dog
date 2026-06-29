@@ -128,6 +128,7 @@ const storybook = ref<Storybook | null>(null)
 
 provide('activeStorybook', activeStorybook)
 provide('activePage', activePage)
+provide('storybook', storybook)
 
 watch(
   activeStorybook,
