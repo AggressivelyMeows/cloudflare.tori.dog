@@ -1,12 +1,12 @@
 ---
 title: 'Steps and state'
 category: 'Workers'
-description: 'Implement the validate, charge, and decide steps, and pass state between them.'
+description: 'Implement the validate and charge steps, and pass state between them.'
 storybook: 'food-ordering'
 author: 'tori'
 ---
 
-The `run` method is a sequence of `step.do` calls. Each step has a name, runs a callback, and returns a value that later steps can read. This page implements the first three steps: validate the basket, charge the card, and decide whether the order needs a human.
+The `run` method is a sequence of `step.do` calls. Each step has a name, runs a callback, and returns a value that later steps can read. This page implements the first two steps: validate the basket and charge the card. The next page adds the first human-in-the-loop step, where the kitchen accepts or rejects the order.
 
 ### Step 1: validate the basket
 
@@ -69,24 +69,11 @@ const charge = await step.do('charge card', async () => {
 })
 ```
 
-`charge` is now an object `{ chargeId }` that the next step can read. The engine persisted it, so even if the Worker restarts before step 3, the charge ID is still available.
-
-### Step 3: decide whether to wait
-
-The third step decides whether the order is large enough to need a manager. The threshold is a business rule; here, anything over $100 (10000 cents) pauses for approval:
-
-```ts
-const decision = await step.do('decide approval', async () => {
-  const needsApproval = total > 10000
-  return { needsApproval }
-})
-```
-
-This step is pure logic, so it could be inline code in `run` rather than a step. Making it a step has two benefits: it shows up in the instance's step list when you observe it (covered later), and its result is persisted so you can see *why* the Workflow did what it did when debugging later.
+`charge` is now an object `{ chargeId }` that the next step can read. The engine persisted it, so even if the Worker restarts before the kitchen step, the charge ID is still available.
 
 ### State flows through return values
 
-Notice that nothing is stored in a global variable. `validation`, `charge`, and `decision` are local variables in `run`, each holding the return value of a step. The engine persists those return values and replays them on resume, so `run` reads as straight-line code even though it's durable:
+Notice that nothing is stored in a global variable. `validation` and `charge` are local variables in `run`, each holding the return value of a step. The engine persists those return values and replays them on resume, so `run` reads as straight-line code even though it's durable:
 
 ```ts
 async run(event: WorkflowEvent<OrderParams>, step: WorkflowStep) {
@@ -94,21 +81,15 @@ async run(event: WorkflowEvent<OrderParams>, step: WorkflowStep) {
 
   const validation = await step.do('validate basket', async () => { /* ... */ })
   const charge = await step.do('charge card', async () => { /* ... */ })
-  const decision = await step.do('decide approval', async () => { /* ... */ })
 
-  // decision.needsApproval is true or false, persisted with the instance.
-  if (decision.needsApproval) {
-    // Wait for a human. Covered on the next page.
-  }
-
-  // Mark fulfilled. Covered after that.
+  // Next: wait for the kitchen to accept the order. Covered on the next page.
 }
 ```
 
-The snippets on this page and the next two each show part of `run`; the [running instances](/labs/workers/food-ordering/running-instances) page assembles them into one complete method. For now, read each block as the next piece of the same `run`.
+The snippets on this page and the next three each show part of `run`; the [running instances](/labs/workers/food-ordering/running-instances) page assembles them into one complete method. For now, read each block as the next piece of the same `run`.
 
 ::warning
 Don't reach outside the Workflow for state that should live inside it. If you store a step's result in D1 and read it back in a later step, the engine can't replay it on resume, and a crash mid-read could see stale or missing data. Use step return values for anything the Workflow itself needs.
 ::
 
-The next page covers the [human-in-the-loop approval step](/labs/workers/food-ordering/human-approval), where the Workflow pauses and waits for a manager.
+The next page covers the [kitchen acceptance step](/labs/workers/food-ordering/human-approval), where the Workflow pauses and waits for the kitchen to accept or reject the order.

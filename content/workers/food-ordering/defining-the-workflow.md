@@ -107,7 +107,7 @@ sequenceDiagram
     S-->>E: return result
     E->>E: persist result
     Note over E: If the Worker crashes here,<br/>the engine resumes from step 3
-    E->>S: run step 3 (decide)
+    E->>S: run step 3 (wait for kitchen)
     S-->>E: return result
 </mermaid>
 

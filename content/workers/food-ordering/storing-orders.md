@@ -1,12 +1,12 @@
 ---
 title: 'Storing orders in D1'
 category: 'Workers'
-description: 'Create a D1 database and schema for food orders and their approval status.'
+description: 'Create a D1 database and schema for food orders and their status through the kitchen and delivery steps.'
 storybook: 'food-ordering'
 author: 'tori'
 ---
 
-The Workflow coordinates the steps, but the orders themselves need a home that outlives any single instance. A customer should be able to look up their order status hours later, and a manager needs a list of orders waiting for approval. <a class="tori-glossary-link" href="?glossary=d1">D1</a> holds that data in a table the Worker and the Workflow both read from and write to.
+The Workflow coordinates the steps, but the orders themselves need a home that outlives any single instance. A customer should be able to look up their order status hours later, the kitchen needs a list of orders waiting to be accepted, and the driver needs to find orders that are ready for pickup. <a class="tori-glossary-link" href="?glossary=d1">D1</a> holds that data in a table the Worker and the Workflow both read from and write to.
 
 ### Create the database
 
@@ -46,7 +46,7 @@ The `binding` is the name your Worker uses to reach the database (`env.DB`). The
 
 ### The schema
 
-An order has an ID, the items the customer ordered, a total, a status, and timestamps. Create `schema.sql` at the project root:
+An order has an ID, the items the customer ordered, a total, a status, and timestamps. The `status` column moves through a set of values as the order progresses: `pending` → `awaiting_kitchen` → `preparing` → `out_for_delivery` → `delivered`, or `rejected` if the kitchen turns it down. Create `schema.sql` at the project root:
 
 ```sql
 CREATE TABLE IF NOT EXISTS orders (
@@ -58,9 +58,9 @@ CREATE TABLE IF NOT EXISTS orders (
   updated_at  INTEGER NOT NULL
 );
 
--- One order can have at most one pending approval, so this index lets the
--- "list orders awaiting approval" query (used on the approval page) scan
--- only the relevant rows.
+-- The kitchen lists orders with status 'awaiting_kitchen', and the driver
+-- lists orders with status 'out_for_delivery'. This index (used on the
+-- kitchen and delivery pages) lets those queries scan only the relevant rows.
 CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
 ```
 

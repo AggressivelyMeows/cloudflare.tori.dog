@@ -24,7 +24,7 @@
   },
   {
     "storybook": "food-ordering",
-    "title": "FlareEats, food ordering with Workflows and D1",
+    "title": "FlareEats; food ordering with Workflows and D1",
     "description": "Coordinate a multi-step order pipeline with Workflows, D1, with human approval steps.",
     "category": "workers",
     "icon": "Workflows",
@@ -33,7 +33,8 @@
       { "title": "Storing orders in D1", "path": "workers/food-ordering/storing-orders" },
       { "title": "Defining the Workflow", "path": "workers/food-ordering/defining-the-workflow" },
       { "title": "Steps and state", "path": "workers/food-ordering/steps-and-state" },
-      { "title": "Human-in-the-loop approval", "path": "workers/food-ordering/human-approval" },
+      { "title": "Human-in-the-loop (Part 1): kitchen acceptance", "path": "workers/food-ordering/human-approval" },
+      { "title": "Human-in-the-loop (Part 2): delivery confirmation", "path": "workers/food-ordering/delivery-confirmation" },
       { "title": "Running and observing instances", "path": "workers/food-ordering/running-instances" }
     ]
   },

@@ -58,24 +58,9 @@ The `id` passed to `create` becomes the instance ID. Using the order ID here mea
 `create()` returns immediately. The Workflow runs asynchronously; the customer's request doesn't wait for it to finish. The response just confirms the order was accepted and the process started.
 ::
 
-### The fulfillment step
-
-With the approval handled, the final step marks the order fulfilled. Add it after the approval block in `run`:
-
-```ts
-await step.do('mark fulfilled', async () => {
-  await env.DB.prepare(
-    "UPDATE orders SET status = 'fulfilled', updated_at = ? WHERE id = ?"
-  ).bind(Date.now(), orderId).run()
-  return { fulfilled: true }
-})
-```
-
-This step runs whether or not approval was required. If approval was required and rejected, the Workflow returned early before reaching this step.
-
 ### The full run method
 
-This is the complete `run` method, combining the steps from the previous two pages into one. Note the `const env = this.env` line: `WorkflowEntrypoint` exposes your `Env` bindings as `this.env` inside the class, so steps that need D1 reach it through `this.env.DB`. (The earlier snippets wrote `env` directly for brevity; in the real file it comes from `this.env`.)
+This is the complete `run` method, combining the steps from the previous three pages into one. Note the `const env = this.env` line: `WorkflowEntrypoint` exposes your `Env` bindings as `this.env` inside the class, so steps that need D1 reach it through `this.env.DB`. (The earlier snippets wrote `env` directly for brevity; in the real file it comes from `this.env`.)
 
 ```ts
 async run(event: WorkflowEvent<OrderParams>, step: WorkflowStep) {
@@ -90,7 +75,7 @@ async run(event: WorkflowEvent<OrderParams>, step: WorkflowStep) {
   })
 
   const charge = await step.do('charge card', async () => {
-    // Call payment provider with paymentToken as idempotency key.
+    // Call payment provider here.
     const response = await fetch('https://api.example-payments.com/charge', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -101,35 +86,78 @@ async run(event: WorkflowEvent<OrderParams>, step: WorkflowStep) {
     return { chargeId: result.chargeId }
   })
 
-  const decision = await step.do('decide approval', async () => {
-    return { needsApproval: total > 10000 }
+  // First human-in-the-loop: wait for the kitchen.
+  await step.do('mark awaiting kitchen', async () => {
+    await env.DB.prepare(
+      "UPDATE orders SET status = 'awaiting_kitchen', updated_at = ? WHERE id = ?"
+    ).bind(Date.now(), orderId).run()
   })
 
-  if (decision.needsApproval) {
-    await step.do('mark awaiting approval', async () => {
-      await env.DB.prepare(
-        "UPDATE orders SET status = 'awaiting_approval', updated_at = ? WHERE id = ?"
-      ).bind(Date.now(), orderId).run()
-      return { waiting: true }
+  let acceptance = 'pending'
+  for (let attempt = 0; attempt < 1440; attempt++) {
+    const result = await step.do(`check kitchen ${attempt}`, async () => {
+      const row = await env.DB.prepare(
+        'SELECT status FROM orders WHERE id = ?'
+      ).bind(orderId).first<{ status: string }>()
+      return row?.status ?? 'pending'
     })
-
-    const approval = await waitForApproval(env, step, orderId)
-    if (approval.status === 'rejected') {
-      await step.do('mark rejected', async () => {
-        await env.DB.prepare(
-          "UPDATE orders SET status = 'rejected', updated_at = ? WHERE id = ?"
-        ).bind(Date.now(), orderId).run()
-        return { rejected: true }
-      })
-      return
+    if (result === 'accepted' || result === 'rejected') {
+      acceptance = result
+      break
     }
+    await step.sleep('wait for kitchen', '60 seconds')
   }
 
-  await step.do('mark fulfilled', async () => {
+  if (acceptance === 'rejected') {
+    await step.do('mark rejected', async () => {
+      await env.DB.prepare(
+        "UPDATE orders SET status = 'rejected', updated_at = ? WHERE id = ?"
+      ).bind(Date.now(), orderId).run()
+    })
+    return
+  }
+
+  await step.do('mark preparing', async () => {
     await env.DB.prepare(
-      "UPDATE orders SET status = 'fulfilled', updated_at = ? WHERE id = ?"
+      "UPDATE orders SET status = 'preparing', updated_at = ? WHERE id = ?"
     ).bind(Date.now(), orderId).run()
-    return { fulfilled: true }
+  })
+
+  // Second human-in-the-loop: wait for the driver.
+  await step.do('mark out for delivery', async () => {
+    await env.DB.prepare(
+      "UPDATE orders SET status = 'out_for_delivery', updated_at = ? WHERE id = ?"
+    ).bind(Date.now(), orderId).run()
+  })
+
+  let delivery = 'pending'
+  for (let attempt = 0; attempt < 1440; attempt++) {
+    const result = await step.do(`check delivery ${attempt}`, async () => {
+      const row = await env.DB.prepare(
+        'SELECT status FROM orders WHERE id = ?'
+      ).bind(orderId).first<{ status: string }>()
+      return row?.status ?? 'pending'
+    })
+    if (result === 'delivered' || result === 'delivery_failed') {
+      delivery = result
+      break
+    }
+    await step.sleep('wait for delivery', '60 seconds')
+  }
+
+  if (delivery === 'delivery_failed') {
+    await step.do('mark delivery failed', async () => {
+      await env.DB.prepare(
+        "UPDATE orders SET status = 'delivery_failed', updated_at = ? WHERE id = ?"
+      ).bind(Date.now(), orderId).run()
+    })
+    return
+  }
+
+  await step.do('mark delivered', async () => {
+    await env.DB.prepare(
+      "UPDATE orders SET status = 'delivered', updated_at = ? WHERE id = ?"
+    ).bind(Date.now(), orderId).run()
   })
 }
 ```
@@ -159,7 +187,7 @@ if (request.method === 'GET') {
 The object returned by `status()` includes the current state (`running`, `complete`, or `errored`) and, when finished, the output. For a deeper view, the Cloudflare dashboard shows each step by name, whether it succeeded, and how long it took.
 
 ::info
-The step names you pass to `step.do` are what show up in the dashboard. Descriptive names like `validate basket` and `check approval 3` make a running instance readable at a glance. Avoid generic names like `step1`.
+The step names you pass to `step.do` are what show up in the dashboard. Descriptive names like `validate basket` and `check kitchen 3` make a running instance readable at a glance. Avoid generic names like `step1`.
 ::
 
 ### Try it
@@ -170,7 +198,7 @@ Start the dev server:
 npx wrangler dev
 ```
 
-Submit a small order (under $100, so it skips approval):
+Submit an order:
 
 ```bash
 curl -X POST http://localhost:8787/orders \
@@ -179,30 +207,35 @@ curl -X POST http://localhost:8787/orders \
 # {"orderId":"x7k2qp9m","status":"pending"}
 ```
 
-Check its status:
+Check its status — it will be `running`, waiting for the kitchen:
+
+```bash
+curl http://localhost:8787/orders/x7k2qp9m/status
+# {"orderId":"x7k2qp9m","status":"running","output":null}
+```
+
+Accept it as the kitchen:
+
+```bash
+curl -X POST http://localhost:8787/orders/x7k2qp9m/accept
+# Order x7k2qp9m accepted
+```
+
+Within a minute (the poll interval), the Workflow moves to `preparing` and then `out_for_delivery`, waiting for the driver. Confirm delivery:
+
+```bash
+curl -X POST http://localhost:8787/orders/x7k2qp9m/deliver
+# Order x7k2qp9m delivered
+```
+
+The order becomes `complete`:
 
 ```bash
 curl http://localhost:8787/orders/x7k2qp9m/status
 # {"orderId":"x7k2qp9m","status":"complete","output":null}
 ```
 
-Submit a large order (over $100, so it pauses):
-
-```bash
-curl -X POST http://localhost:8787/orders \
-  -H "Content-Type: application/json" \
-  -d '{"items":[{"name":"catering tray","price":15000,"quantity":1}],"paymentToken":"tok_test"}'
-# {"orderId":"ab3df8nk","status":"pending"}
-```
-
-It will be `running`, waiting for approval. Approve it:
-
-```bash
-curl -X POST http://localhost:8787/orders/ab3df8nk/approve
-# Order ab3df8nk approved
-```
-
-Within a minute (the poll interval), the Workflow resumes and the order becomes `complete`.
+To see the rejection path, submit another order and `reject` it instead of `accept` — the Workflow ends without reaching delivery.
 
 ### Deploy
 
@@ -215,6 +248,6 @@ npx wrangler deploy
 
 ### Where to next?
 
-- Add a `reject` route and confirm the Workflow ends without fulfilling the order.
-- Replace the polling wait with a shorter sleep for testing, then tune it for production.
-- Add a step that sends the customer an email when the order is fulfilled, using an email binding or a third-party API.
+- Add a `GET /orders` route that lists orders by status, so the kitchen and driver have dashboards.
+- Add a "ready for pickup" step between `preparing` and `out_for_delivery`, so the driver only sees orders that are actually ready.
+- Add a step that sends the customer an email when the order is delivered, using an email binding or a third-party API.
