@@ -8,7 +8,7 @@
           />
         </div>
 
-        <div class="flex flex-row items-center space-x-3 mt-3 sm:mt-0">
+        <div class="flex flex-row items-center space-x-3">
           <NuxtLink v-if="author" :to="`/labs${author.path}`" class="flex flex-row border-2 border-stone-900 bg-stone-950 rounded-lg py-1.5 px-3 items-center text-xs">
             Written by
 
@@ -29,7 +29,7 @@
         </div>
       </div>
 
-      <div class="flex flex-col md:flex-row md:items-center mb-3 text-base text-stone-200" v-if="storybook">
+      <div class="flex flex-col md:flex-row md:items-center mb-3 text-base text-stone-200" v-if="storybook && false">
         {{ storybook.title }}
 
         <div class="flex-grow"></div>
