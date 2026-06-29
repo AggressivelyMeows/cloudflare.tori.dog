@@ -29,7 +29,7 @@
         </div>
       </div>
 
-      <div class="flex flex-col md:flex-row md:items-center mb-3 text-base text-stone-200">
+      <div class="flex flex-col md:flex-row md:items-center mb-3 text-base text-stone-200" v-if="storybook">
         {{ storybook.title }}
 
         <div class="flex-grow"></div>
