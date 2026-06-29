@@ -1,6 +1,14 @@
 <template>
   <div class="font-[400] relative text-stone-200 min-h-screen" :style="theming.labs" >
 
+    <h1
+      v-if="!isHome"
+      class="block md:hidden text-5xl my-3 mx-3 z-10 block relative items-self-center md:text-[5rem] lg:text-[8rem] font-bold bg-clip-text text-transparent bg-cover bg-center tracking-tighter leading-[0.9]"
+      :style="`background-color: var(--ui-color-primary-500);background-image: url('/constellations-bg.avif');`"
+    >
+      Workers<br/>Labs. 
+    </h1>
+
     <ClientOnly>
       <DotGrid
         :glow-radius="145"
@@ -64,8 +72,9 @@
         <div class="tori-card m-3 p-3">
           <a href="https://avatar.tori.dog" target="_blank" rel="noopener">
             <img
-              src="https://nyc3.digitaloceanspaces.com/cerulean/screenshots/2025/10/aunn.png"
+              src="/images/avatar.webp"
               class="mb-2 rounded-sm overflow-hidden size-32 md:size-[unset] object-cover"
+              alt="Tori's avatar."
             />
           </a>
 

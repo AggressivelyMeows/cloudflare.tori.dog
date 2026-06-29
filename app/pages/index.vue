@@ -1,7 +1,7 @@
 <template>
   <div class="font-medium z-10">
     <h1
-      class="text-4xl items-self-center md:text-[5rem] lg:text-[8rem] font-bold bg-clip-text text-transparent bg-cover bg-center tracking-tighter leading-[0.9]"
+      class="text-5xl items-self-center md:text-[5rem] lg:text-[8rem] font-bold bg-clip-text text-transparent bg-cover bg-center tracking-tighter leading-[0.9]"
       :style="`background-color: var(--ui-color-primary-500);background-image: url('${titleImageSrc}');`"
     >
       Workers<br/>Labs. 
