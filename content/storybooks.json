@@ -23,6 +23,21 @@
     ]
   },
   {
+    "storybook": "food-ordering",
+    "title": "FlareEats, food ordering with Workflows and D1",
+    "description": "Coordinate a multi-step order pipeline with Workflows, D1, with human approval steps.",
+    "category": "workers",
+    "icon": "Workflows",
+    "pages": [
+      { "title": "Ordering with Workflows", "path": "workers/food-ordering/ordering-with-workflows" },
+      { "title": "Storing orders in D1", "path": "workers/food-ordering/storing-orders" },
+      { "title": "Defining the Workflow", "path": "workers/food-ordering/defining-the-workflow" },
+      { "title": "Steps and state", "path": "workers/food-ordering/steps-and-state" },
+      { "title": "Human-in-the-loop approval", "path": "workers/food-ordering/human-approval" },
+      { "title": "Running and observing instances", "path": "workers/food-ordering/running-instances" }
+    ]
+  },
+  {
     "storybook": "durable-objects",
     "title": "Getting started with Durable Objects",
     "description": "Learn how to build stateful applications on Cloudflare with Durable Objects.",
@@ -68,6 +83,18 @@
     "pages": [
       { "title": "What is KV?", "path": "storage/kv/what-is-kv" },
       { "title": "Your first KV namespace", "path": "storage/kv/first-kv-namespace" }
+    ]
+  },
+  {
+    "storybook": "url-shortener",
+    "title": "Building a URL shortener with D1",
+    "description": "Store short links in a SQL database and redirect visitors with a Worker.",
+    "category": "storage",
+    "icon": "Storage",
+    "pages": [
+      { "title": "Building a URL shortener", "path": "storage/url-shortener/url-shortener" },
+      { "title": "Creating short links", "path": "storage/url-shortener/creating-links" },
+      { "title": "Redirecting visitors", "path": "storage/url-shortener/redirecting-visitors" }
     ]
   }
 ]

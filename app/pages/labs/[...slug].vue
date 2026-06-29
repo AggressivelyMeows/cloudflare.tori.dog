@@ -92,7 +92,7 @@ const activeStorybook = inject('activeStorybook') as Ref<string>
 const activePage = inject('activePage') as Ref<string>
 const showGlossary = ref(false)
 const glossary = ref<any>(null)
-const loading = ref(true)
+const loading = ref(false)
 
 const route = useRoute()
 const router = useRouter()
@@ -100,12 +100,16 @@ const runtimeConfig = useRuntimeConfig()
 
 const githubRepo = runtimeConfig.public.githubRepo
 
+const concatSlug = (slugParams: string[] | string) => {
+  if (Array.isArray(slugParams)) {
+    return slugParams.join('/')
+  }
+  return slugParams || '/'
+}
+
 const slug = computed(() => {
   const slugParam = route.params.slug
-  if (Array.isArray(slugParam)) {
-    return slugParam.join('/')
-  }
-  return slugParam || ''
+  return concatSlug(slugParam || '')
 })
 
 // Single source of truth for the post data.
@@ -140,7 +144,10 @@ watch(post, (newPost) => {
 watch(
   () => route.params.slug,
   () => {
-    loading.value = true
+    const concattedSlug = concatSlug(route.params.slug || '')
+    if (concattedSlug !== slug.value) {
+      loading.value = true
+    }
   }
 )
 
@@ -183,6 +190,11 @@ onKeyStroke('Escape', () => {
 })
 
 onBeforeRouteLeave((to, from) => {
+  console.debug(`[ROUTER] Leaving route ${from.fullPath} to ${to.fullPath}`)
+  if (to.name === from.name && to.query.glossary !== from.query.glossary) {
+    return
+  }
+
   if (to.name === from.name && to.params.slug !== from.params.slug) {
     return
   }
