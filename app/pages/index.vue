@@ -12,12 +12,33 @@
         <a href="https://www.cloudflare.com/" rel="noopener noreferrer" target="_blank" class="tori-link">Cloudflare</a> offers a powerful set of serverless tools that allow developers to build and deploy applications at the edge of the network.
         <br/><br/>
         Our goal is to provide a comprehensive set of tutorials and resources to help developers get started with Cloudflare's serverless platform, including Workers, Durable Objects, R2, and more!
+        <br/><br/>
+        Join hundreds of other developers in learning how to build awesome applications on Cloudflare's serverless platform.
       </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 mt-6" v-show="false">
-      <div class="border-2 p-3 rounded-lg bg-green-500/50 border-green-500">
-        Interviews with the team.
+    <div>
+      <!-- Constantly horizontally scrolling list of comments -->
+      <div>
+        <NuxtLink to="/testimonials">
+          <div class="flex flex-row rounded-lg space-x-3 overflow-x-auto mt-6" style="scrollbar-width: none; -ms-overflow-style: none; " id="horizontal-scroll-comments">
+            <div
+              v-for="comment in comments"
+              :key="comment.Comment"
+              class="tori-card p-3 flex-shrink-0 min-w-[150px] max-w-[250px] h-32 flex flex-col"
+            >
+              <p class="text-sm text-stone-300">
+                {{ comment.Comment }}
+              </p>
+
+              <div class="flex-grow"></div>
+
+              <p class="text-xs text-stone-500 mt-2">
+                - {{ comment.Author }}
+              </p>
+            </div>
+          </div>
+        </NuxtLink>
       </div>
     </div>
 
@@ -87,7 +108,13 @@ import ContentTag from '~/components/content-tag.vue'
 import storybooks from '../../content/storybooks.json'
 import categories from '../../content/categories.json'
 
+type Comment = {
+  Comment: string,
+  Author: string
+}
+
 const titleImageSrc = ref('/frame0.webp')
+const comments = ref<Comment[]>([])
 
 onMounted(() => {
   const animatedTitleImage = new Image()
@@ -96,5 +123,43 @@ onMounted(() => {
   animatedTitleImage.onload = () => {
     titleImageSrc.value = '/constellations-bg.avif'
   }
+
+  // Use raf to scroll the comments horizontally
+  // Pixel by pixel until the max, then loop back to the start
+  // Pause if the mouse is hovering over the comments section
+  const commentsSection = document.getElementById('horizontal-scroll-comments')
+  let scrollPosition = 0
+  let isHovering = false
+
+  commentsSection?.addEventListener('mouseenter', () => {
+    isHovering = true
+  })
+
+  commentsSection?.addEventListener('mouseleave', () => {
+    isHovering = false
+  })
+
+  const scrollComments = () => {
+    if (!isHovering && commentsSection) {
+      scrollPosition += 1
+      if (scrollPosition >= commentsSection.scrollWidth - commentsSection.clientWidth) {
+        scrollPosition = 0
+      }
+      commentsSection.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      })
+    }
+    
+    setTimeout(scrollComments, 50)
+  }
+  scrollComments()
 })
+
+const loadComments = async () => {
+  const response = await fetch(`https://horseman.ceru.dev/v1/models/workers-comments/objects?key=-WWzvQ7K-7e1`).then(x => x.json()) as { results: Comment[] }
+  comments.value = response.results
+}
+
+onMounted(loadComments)
 </script>

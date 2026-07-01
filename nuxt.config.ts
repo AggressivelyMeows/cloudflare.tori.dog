@@ -4,6 +4,8 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
 
   runtimeConfig: {
+    horsemanKey: '',
+    openrouterKey: '',
     public: {
       githubRepo: 'https://github.com/AggressivelyMeows/cloudflare.tori.dog'
     }
