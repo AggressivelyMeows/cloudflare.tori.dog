@@ -8,7 +8,7 @@ author: 'tori'
 
 Build a `/feature-flags` endpoint that accepts evaluation context in its query string, such as `userId` and `plan`. Inside the Worker, use a Flagship read token to list the flags in the configured app, then evaluate each returned key with the native `env.FLAGS` binding. The binding uses the request context and the configuration already published to Cloudflare's network. The browser never calls the Flagship management API directly.
 
-The Worker keeps the flag list, enabled state, rules, variations, default-variation names, and API token private. It sends the browser one ordered array containing only the evaluated values. The browser can use those values to render the current experience, while the Worker retains the configuration required to decide how each value was selected.
+The Worker keeps the enabled state, rules, variations, default-variation names, and API token private. It sends the browser one object that maps each flag key to its evaluated value. The browser can use those values to render the current experience, while the Worker retains the configuration required to decide how each value was selected.
 
 ### List and evaluate flags in the Worker
 
@@ -40,6 +40,7 @@ const listFlags = async (env: Env): Promise<Flag[]> => {
   let cursor: string | null = null
 
   do {
+    // Fetch one page at a time because an app can contain more than 200 flags.
     const searchParams = new URLSearchParams({ limit: "200" })
     if (cursor) searchParams.set("cursor", cursor)
 
@@ -54,6 +55,7 @@ const listFlags = async (env: Env): Promise<Flag[]> => {
 
     const page = await response.json() as FlagshipListResponse
     flags.push(...page.result)
+    // A cursor means another page is available; null ends the loop.
     cursor = page.result_info.cursor
   } while (cursor)
 
@@ -71,14 +73,20 @@ export default {
     try {
       const context = Object.fromEntries(url.searchParams)
       const flags = await listFlags(env)
-      const values = await Promise.all(
+      const entries = await Promise.all(
         flags.map((flag) => {
+          // Use the Flagship default variation if this evaluation cannot succeed.
           const fallback = flag.variations[flag.default_variation]
+          // Keep the flag key with its evaluated value for the browser response.
           return env.FLAGS.get(flag.key, fallback, context)
+            .then((value) => [flag.key, value] as const)
         }),
       )
+      
+      // Turn pairs such as ["use-cosmetics", true] into a JSON object.
+      const values = Object.fromEntries(entries)
 
-      return Response.json({ values }, {
+      return Response.json(values, {
         headers: { "Cache-Control": "private, no-store" },
       })
     } catch {
@@ -88,7 +96,7 @@ export default {
 }
 ```
 
-The management API returns keys and default variations only to the Worker. `env.FLAGS.get()` evaluates each key against the request context. The browser receives a `values` array in the same order as Flagship's key-ordered list, with no key, rule, variation, enabled-state, or targeting data.
+The management API returns keys and default variations only to the Worker. `env.FLAGS.get()` evaluates each key against the request context. The browser receives an object such as `{ "use-cosmetics": true, "dashboard": "test-v1" }`, with no rule, variation, enabled-state, or targeting data.
 
 Set the management token as a Worker secret. You'll also need to set your Account ID, and the Flagship app ID as secrets.
 
@@ -111,11 +119,9 @@ The token needs `flagship:read` permission. The endpoint follows the API cursor 
 Pass the evaluation context in the query string:
 
 ```ts
-type FeatureFlagValues = {
-  values: unknown[]
-}
+type FeatureFlagValues = Record<string, unknown>
 
-const { values } = await fetch(
+const flags = await fetch(
   "/feature-flags?userId=user-42&plan=enterprise",
 )
   .then((response) => {
@@ -123,7 +129,7 @@ const { values } = await fetch(
     return response.json()
   }) as FeatureFlagValues
 
-console.log(values)
+console.log(flags["use-cosmetics"])
 ```
 
 ::warning
