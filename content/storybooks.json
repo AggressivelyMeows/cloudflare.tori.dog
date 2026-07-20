@@ -25,6 +25,20 @@
     ]
   },
   {
+    "storybook": "flagship",
+    "title": "Feature flags with Flagship",
+    "description": "Release Worker and browser features safely with Cloudflare Flagship.",
+    "category": "workers",
+    "icon": "Workers",
+    "complexity": 3,
+    "pages": [
+      { "title": "Introduction to Flagship", "path": "workers/flagship/introduction" },
+      { "title": "Evaluate flags on the server", "path": "workers/flagship/server-side" },
+      { "title": "Use flags in browser UI", "path": "workers/flagship/client-side" },
+      { "title": "Limits and evaluation errors", "path": "workers/flagship/limits-and-errors" }
+    ]
+  },
+  {
     "storybook": "food-ordering",
     "title": "FlareEats; food ordering with Workflows and D1",
     "description": "Coordinate a multi-step order pipeline with Workflows, D1, with human approval steps.",

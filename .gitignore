@@ -17,6 +17,7 @@ logs
 # Misc
 .DS_Store
 create-comment.js
+internal
 .fleet
 .idea
 
