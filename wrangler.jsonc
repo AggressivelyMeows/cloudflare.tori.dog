@@ -40,5 +40,12 @@
 			"binding": "AUTH",
 			"service": "torii"
 		}
+	],
+	"vpc_services": [
+		{
+			"binding": "PROXY",
+			"remote": true,
+			"service_id": "019f8e2e-c2cd-7ec0-a385-5c7d04c1f34d"
+		}
 	]
 }

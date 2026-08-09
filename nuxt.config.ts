@@ -17,6 +17,10 @@ export default defineNuxtConfig({
     cloudflare: {
       deployConfig: true,
       nodeCompat: true
+    },
+
+    prerender: {
+      crawlLinks: true
     }
   },
 
@@ -28,7 +32,9 @@ export default defineNuxtConfig({
   ],
   css: ['~/main.css'],
   routeRules: {
-    '/': { prerender: true }
+    '/': { prerender: true },
+    // Prerender everything under /labs so that the sitemap.xml route can be generated correctly.
+    '/labs/**': { prerender: true },
   },
 
   content: {
