@@ -28,7 +28,7 @@ export default defineEventHandler((event) => {
   // Home page
   urls.push({
     loc: `${siteOrigin}/`,
-    changefreq: 'weekly',
+    changefreq: 'daily',
     priority: 1.0
   })
 
@@ -37,8 +37,8 @@ export default defineEventHandler((event) => {
     for (const page of storybook.pages) {
       urls.push({
         loc: `${siteOrigin}/labs/${page.path}`,
-        changefreq: 'monthly',
-        priority: 0.8
+        changefreq: 'daily',
+        priority: 1
       })
     }
   }
