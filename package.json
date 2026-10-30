@@ -35,7 +35,7 @@
 		"monaco-editor": "*",
 		"monaco-editor-vue3": "^1.0.5",
 		"node-html-parser": "^7.0.1",
-		"nuxt": "^4.1.0",
+		"nuxt": "^4.6.2",
 		"nuxt-monaco-editor": "1.4.0",
 		"reka-ui": "^2.6.0",
 		"tailwindcss": "^4.1.13",
